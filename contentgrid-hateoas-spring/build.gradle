@@ -1,5 +1,6 @@
 plugins {
     id 'java-library'
+    id 'io.freefair.lombok'
     id 'maven-publish'
 }
 
@@ -10,13 +11,19 @@ repositories {
 dependencies {
     api platform("org.springframework.boot:spring-boot-dependencies:2.7.11")
 
-    compileOnly 'org.projectlombok:lombok:1.18.26'
-    annotationProcessor 'org.projectlombok:lombok:1.18.26'
-
     api project(":contentgrid-pagination:contentgrid-pagination-api")
 
-    implementation 'org.springframework.hateoas:spring-hateoas'
+    api 'org.springframework.hateoas:spring-hateoas'
+
     implementation 'org.springframework:spring-webmvc'
     implementation 'com.fasterxml.jackson.core:jackson-annotations'
 
+    testImplementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine'
+    testImplementation 'org.assertj:assertj-core'
+}
+
+test {
+    useJUnitPlatform()
 }
