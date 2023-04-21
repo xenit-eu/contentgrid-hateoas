@@ -1,5 +1,6 @@
 package com.contentgrid.hateoas.spring.affordances;
 
+import com.contentgrid.hateoas.spring.annotations.PublicApi;
 import java.util.List;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
@@ -15,6 +16,7 @@ import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
  * Allows customizing multiple {@link Affordance}s on a common base affordance
  */
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+@PublicApi
 public class Affordances implements CustomizableAffordance<Affordances> {
     @NonNull
     private final AffordanceCustomizer baseCustomizer;

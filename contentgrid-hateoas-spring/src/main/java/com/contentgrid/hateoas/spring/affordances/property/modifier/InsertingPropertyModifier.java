@@ -10,17 +10,7 @@ class InsertingPropertyModifier implements PropertyModifier {
     private final PropertyMetadata metadata;
 
     @Override
-    public PropertyMetadata customizeProperty(PropertyMetadata propertyMetadata) {
-        return propertyMetadata;
-    }
-
-    @Override
-    public boolean keepProperty(PropertyMetadata propertyMetadata) {
-        return true;
-    }
-
-    @Override
-    public Stream<PropertyMetadata> addProperties() {
-        return Stream.of(metadata);
+    public Stream<PropertyMetadata> modify(Stream<PropertyMetadata> oldProperties) {
+        return Stream.concat(oldProperties, Stream.of(metadata));
     }
 }

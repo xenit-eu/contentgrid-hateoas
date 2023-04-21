@@ -6,17 +6,7 @@ import org.springframework.hateoas.AffordanceModel.PropertyMetadata;
 class NonePropertyModifier implements PropertyModifier {
 
     @Override
-    public PropertyMetadata customizeProperty(PropertyMetadata propertyMetadata) {
-        return propertyMetadata;
-    }
-
-    @Override
-    public boolean keepProperty(PropertyMetadata propertyMetadata) {
-        return true;
-    }
-
-    @Override
-    public Stream<PropertyMetadata> addProperties() {
-        return Stream.empty();
+    public Stream<PropertyMetadata> modify(Stream<PropertyMetadata> oldProperties) {
+        return oldProperties;
     }
 }

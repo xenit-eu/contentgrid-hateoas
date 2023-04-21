@@ -2,6 +2,7 @@ package com.contentgrid.hateoas.spring.affordances;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
+import com.contentgrid.hateoas.spring.annotations.PublicApi;
 import java.util.Objects;
 import java.util.function.UnaryOperator;
 import lombok.AccessLevel;
@@ -19,6 +20,7 @@ import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
  * Allows customizing an {@link Affordance} to change some of its properties
  */
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+@PublicApi
 public class AffordanceCustomizer implements CustomizableAffordance<AffordanceCustomizer> {
 
     @NonNull

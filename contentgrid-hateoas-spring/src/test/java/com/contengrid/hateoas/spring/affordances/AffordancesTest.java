@@ -17,7 +17,7 @@ import org.springframework.http.HttpMethod;
 class AffordancesTest {
     @Test
     void defaultAfford() {
-        var standardAffordances = Affordances.afford(methodOn(TestRestController.class).patch("abc", null));
+        var standardAffordances = Affordances.afford(methodOn(TestRestController.class).patchTestResource("abc", null));
 
         assertThat(standardAffordances.stream()).satisfiesExactly(affordance -> {
             assertThat((AffordanceModel)affordance.getAffordanceModel(MediaTypes.HAL_FORMS_JSON)).satisfies(affordanceModel -> {
@@ -29,8 +29,8 @@ class AffordancesTest {
     }
 
     @Test
-    void additionallAfford() {
-        var standardAffordances = Affordances.afford(methodOn(TestRestController.class).patch("abc", null))
+    void additionalAfford() {
+        var standardAffordances = Affordances.afford(methodOn(TestRestController.class).patchTestResource("abc", null))
                 .configure(configurableAffordance -> configurableAffordance.withName("someName"))
                 .additionally(additionalCustomizer -> additionalCustomizer.configureInput(PropertyModifier.drop("name")));
 

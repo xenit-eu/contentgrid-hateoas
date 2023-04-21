@@ -3,6 +3,7 @@ package com.contentgrid.hateoas.spring.hal.forms;
 import com.contentgrid.hateoas.spring.affordances.property.CustomPropertyMetadata;
 import com.contentgrid.hateoas.spring.affordances.property.PropertyMetadataWithAllowedValues;
 import com.contentgrid.hateoas.spring.affordances.property.PropertyMetadataWithSelectedValue;
+import com.contentgrid.hateoas.spring.annotations.PublicApi;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.function.Function;
@@ -14,9 +15,15 @@ import org.springframework.hateoas.mediatype.hal.forms.HalFormsOptions;
 /**
  * Sets up options metadata in {@link org.springframework.hateoas.mediatype.hal.forms.HalFormsConfiguration#withOptions(Class, String, Function)}
  *
- *
+ * <pre>
+ *     HalFormsConfiguration halFormsConfiguration;
+ *     halFormsConfiguration
+ *          .withOptions(Employee.class, "department", new OptionsMetadata(DepartmentEnum.values()))
+ *          .withOptions(Employee.class, "type", new OptionsMetadata());
+ * </pre>
  */
 @RequiredArgsConstructor
+@PublicApi
 public class OptionsMetadata implements Function<PropertyMetadata, HalFormsOptions> {
     @NonNull
     private final Collection<?> defaultValues;

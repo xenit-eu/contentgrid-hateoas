@@ -12,20 +12,15 @@ class CustomizingPropertyModifier implements PropertyModifier {
     private final Function<PropertyMetadata, PropertyMetadata> customizer;
 
     @Override
-    public PropertyMetadata customizeProperty(PropertyMetadata propertyMetadata) {
+    public Stream<PropertyMetadata> modify(Stream<PropertyMetadata> oldProperties) {
+        return oldProperties.map(this::customizeProperty);
+    }
+
+    private PropertyMetadata customizeProperty(PropertyMetadata propertyMetadata) {
         if (propertyMetadata.hasName(propertyName)) {
             return customizer.apply(propertyMetadata);
         }
         return propertyMetadata;
     }
 
-    @Override
-    public boolean keepProperty(PropertyMetadata propertyMetadata) {
-        return true;
-    }
-
-    @Override
-    public Stream<PropertyMetadata> addProperties() {
-        return Stream.empty();
-    }
 }

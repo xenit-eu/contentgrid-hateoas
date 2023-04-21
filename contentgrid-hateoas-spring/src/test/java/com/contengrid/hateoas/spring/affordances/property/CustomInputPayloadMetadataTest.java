@@ -1,4 +1,4 @@
-package com.contengrid.hateoas.spring.affordances;
+package com.contengrid.hateoas.spring.affordances.property;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

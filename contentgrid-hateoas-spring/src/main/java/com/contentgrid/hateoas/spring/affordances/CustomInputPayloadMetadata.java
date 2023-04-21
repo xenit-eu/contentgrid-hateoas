@@ -4,6 +4,7 @@ import com.contentgrid.hateoas.spring.affordances.property.modifier.PropertyModi
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
+import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ResolvableType;
@@ -16,7 +17,7 @@ import org.springframework.http.MediaType;
 /**
  * Custom {@link InputPayloadMetadata} that changes the {@link PropertyMetadata} returned from a delegate {@link InputPayloadMetadata}
  */
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class CustomInputPayloadMetadata implements InputPayloadMetadata {
 
     @NonNull
@@ -44,25 +45,24 @@ public class CustomInputPayloadMetadata implements InputPayloadMetadata {
      * @return New {@link CustomInputPayloadMetadata} instance with an additional {@link PropertyModifier} applied to it
      */
     public CustomInputPayloadMetadata with(PropertyModifier propertyModifier) {
-        return new CustomInputPayloadMetadata(delegate,
-                new ComposedPropertyModifier(this.propertyModifier, propertyModifier));
+        return new CustomInputPayloadMetadata(delegate, this.propertyModifier.andThen(propertyModifier));
     }
 
     @Override
     public @NonNull Stream<PropertyMetadata> stream() {
-        return Stream.concat(delegate.stream(), propertyModifier.addProperties())
-                .filter(propertyModifier::keepProperty)
-                .map(propertyModifier::customizeProperty);
+        return propertyModifier.modify(delegate.stream());
     }
 
     @Override
     public <T extends Named> @NonNull T customize(@NonNull T target,
             @NonNull Function<PropertyMetadata, T> customizer) {
         return delegate.customize(target, propertyMetadata -> {
-            if (propertyModifier.keepProperty(propertyMetadata)) {
-                return target;
+            var iterator = propertyModifier.modify(Stream.of(propertyMetadata)).iterator();
+            var newTarget = target;
+            while(iterator.hasNext()) {
+                newTarget = customizer.apply(iterator.next());
             }
-            return customizer.apply(propertyModifier.customizeProperty(propertyMetadata));
+            return newTarget;
         });
     }
 
@@ -84,28 +84,6 @@ public class CustomInputPayloadMetadata implements InputPayloadMetadata {
     @Override
     public Class<?> getType() {
         return delegate.getType();
-    }
-
-    @RequiredArgsConstructor
-    private static class ComposedPropertyModifier implements PropertyModifier {
-
-        private final PropertyModifier first;
-        private final PropertyModifier second;
-
-        @Override
-        public PropertyMetadata customizeProperty(PropertyMetadata propertyMetadata) {
-            return second.customizeProperty(first.customizeProperty(propertyMetadata));
-        }
-
-        @Override
-        public boolean keepProperty(PropertyMetadata propertyMetadata) {
-            return first.keepProperty(propertyMetadata) && second.keepProperty(propertyMetadata);
-        }
-
-        @Override
-        public Stream<PropertyMetadata> addProperties() {
-            return Stream.concat(first.addProperties(), second.addProperties());
-        }
     }
 
 }
