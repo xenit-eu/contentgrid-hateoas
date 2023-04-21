@@ -165,6 +165,39 @@ class AffordancesTest {
                 },
                 affordance -> {
                     assertThat((AffordanceModel)affordance.getAffordanceModel(MediaTypes.HAL_FORMS_JSON)).satisfies(affordanceModel -> {
+                        assertThat(affordanceModel.getName()).isEqualTo("patchTestResource");
+                        assertThat(affordanceModel.getHttpMethod()).isEqualTo(HttpMethod.PATCH);
+                        assertThat(affordanceModel.getLink().getHref()).isEqualTo("/test/xyz");
+                    });
+                }
+        );
+    }
+
+    @Test
+    void addAffordances() {
+        var affordances = Affordances.on(methodOn(TestRestController.class).getTestResource("abc"))
+                .andAffordances(
+                        Affordances.on(methodOn(TestRestController.class).patchTestResource("xyz", null))
+                                .additionally(customizer -> customizer.configure(affordance -> affordance.withName("patch")))
+                );
+        assertThat(affordances.stream()).satisfiesExactly(
+                affordance -> {
+                    assertThat((AffordanceModel)affordance.getAffordanceModel(MediaTypes.HAL_FORMS_JSON)).satisfies(affordanceModel -> {
+                        assertThat(affordanceModel.getName()).isEqualTo("getTestResource");
+                        assertThat(affordanceModel.getHttpMethod()).isEqualTo(HttpMethod.GET);
+                        assertThat(affordanceModel.getLink().getHref()).isEqualTo("/test/abc");
+                    });
+                },
+                affordance -> {
+                    assertThat((AffordanceModel)affordance.getAffordanceModel(MediaTypes.HAL_FORMS_JSON)).satisfies(affordanceModel -> {
+                        assertThat(affordanceModel.getName()).isEqualTo("patchTestResource");
+                        assertThat(affordanceModel.getHttpMethod()).isEqualTo(HttpMethod.PATCH);
+                        assertThat(affordanceModel.getLink().getHref()).isEqualTo("/test/xyz");
+                    });
+                },
+                affordance -> {
+                    assertThat((AffordanceModel)affordance.getAffordanceModel(MediaTypes.HAL_FORMS_JSON)).satisfies(affordanceModel -> {
+                        assertThat(affordanceModel.getName()).isEqualTo("patch");
                         assertThat(affordanceModel.getHttpMethod()).isEqualTo(HttpMethod.PATCH);
                         assertThat(affordanceModel.getLink().getHref()).isEqualTo("/test/xyz");
                     });

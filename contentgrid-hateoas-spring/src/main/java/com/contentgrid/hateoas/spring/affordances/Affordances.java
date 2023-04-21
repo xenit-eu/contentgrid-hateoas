@@ -93,6 +93,13 @@ public class Affordances implements CustomizableAffordance<Affordances> {
     }
 
     /**
+     * Adds additional affordances that are created separately
+     */
+    public Affordances andAffordances(Affordances affordances) {
+        return withAffordances(Stream.concat(this.affordances.stream(), affordances.stream()).toList());
+    }
+
+    /**
      * Pins down a "default" _template for HAL-FORMS
      */
     public Affordances withDefault() {
