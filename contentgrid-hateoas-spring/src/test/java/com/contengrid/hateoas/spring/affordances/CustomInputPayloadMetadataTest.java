@@ -3,10 +3,10 @@ package com.contengrid.hateoas.spring.affordances;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.contentgrid.hateoas.spring.affordances.CustomInputPayloadMetadata;
-import com.contentgrid.hateoas.spring.affordances.CustomInputPayloadMetadata.PropertyModifier;
-import com.contentgrid.hateoas.spring.affordances.CustomPropertyMetadata;
-import com.contentgrid.hateoas.spring.affordances.PropertyMetadataWithAllowedValues;
-import com.contentgrid.hateoas.spring.affordances.PropertyMetadataWithSelectedValue;
+import com.contentgrid.hateoas.spring.affordances.property.modifier.PropertyModifier;
+import com.contentgrid.hateoas.spring.affordances.property.CustomPropertyMetadata;
+import com.contentgrid.hateoas.spring.affordances.property.PropertyMetadataWithAllowedValues;
+import com.contentgrid.hateoas.spring.affordances.property.PropertyMetadataWithSelectedValue;
 import java.util.List;
 import lombok.Data;
 import org.junit.jupiter.api.Test;

@@ -4,14 +4,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import com.contentgrid.hateoas.spring.affordances.AffordanceCustomizer;
-import com.contentgrid.hateoas.spring.affordances.CustomInputPayloadMetadata;
+import com.contentgrid.hateoas.spring.affordances.property.modifier.PropertyModifier;
 import lombok.Data;
 import lombok.NonNull;
 import com.contengrid.hateoas.spring.affordances.AffordanceCustomizerTest.TestRestController;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.hateoas.AffordanceModel.PropertyMetadata;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.config.EnableHypermediaSupport;
@@ -93,7 +92,7 @@ class AffordanceCustomizerTest {
     void customizedAffordance() {
         var affordance = AffordanceCustomizer.afford(methodOn(TestRestController.class).patch("abc", null))
                 .configure(configurableAffordance -> configurableAffordance.withName("update"))
-                .configureInput(CustomInputPayloadMetadata.PropertyModifier.drop("name"))
+                .configureInput(PropertyModifier.drop("name"))
                 .build();
 
         var affordanceModel = affordance.getAffordanceModel(MediaTypes.HAL_FORMS_JSON);

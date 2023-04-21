@@ -1,8 +1,8 @@
 package com.contentgrid.hateoas.spring.hal.forms;
 
-import com.contentgrid.hateoas.spring.affordances.CustomPropertyMetadata;
-import com.contentgrid.hateoas.spring.affordances.PropertyMetadataWithAllowedValues;
-import com.contentgrid.hateoas.spring.affordances.PropertyMetadataWithSelectedValue;
+import com.contentgrid.hateoas.spring.affordances.property.CustomPropertyMetadata;
+import com.contentgrid.hateoas.spring.affordances.property.PropertyMetadataWithAllowedValues;
+import com.contentgrid.hateoas.spring.affordances.property.PropertyMetadataWithSelectedValue;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.function.Function;

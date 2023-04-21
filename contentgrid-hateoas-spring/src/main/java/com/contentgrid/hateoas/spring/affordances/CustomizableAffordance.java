@@ -1,6 +1,6 @@
 package com.contentgrid.hateoas.spring.affordances;
 
-import com.contentgrid.hateoas.spring.affordances.CustomInputPayloadMetadata.PropertyModifier;
+import com.contentgrid.hateoas.spring.affordances.property.modifier.PropertyModifier;
 import java.util.function.UnaryOperator;
 import org.springframework.hateoas.mediatype.ConfigurableAffordance;
 

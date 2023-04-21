@@ -1,4 +1,4 @@
-package com.contentgrid.hateoas.spring.affordances;
+package com.contentgrid.hateoas.spring.affordances.property;
 
 import lombok.Getter;
 import org.springframework.hateoas.AffordanceModel.PropertyMetadata;

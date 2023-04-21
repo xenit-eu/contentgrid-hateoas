@@ -5,7 +5,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import com.contengrid.hateoas.spring.affordances.AffordanceCustomizerTest.TestRestController;
 import com.contentgrid.hateoas.spring.affordances.Affordances;
-import com.contentgrid.hateoas.spring.affordances.CustomInputPayloadMetadata.PropertyModifier;
+import com.contentgrid.hateoas.spring.affordances.property.modifier.PropertyModifier;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.hateoas.AffordanceModel;
