@@ -15,6 +15,7 @@ import org.springframework.hateoas.AffordanceModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.mediatype.ConfigurableAffordance;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+import org.springframework.http.HttpMethod;
 
 /**
  * Allows customizing an {@link Affordance} to change some of its properties
@@ -22,7 +23,6 @@ import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @PublicApi
 public class AffordanceCustomizer implements CustomizableAffordance<AffordanceCustomizer> {
-
     @NonNull
     private final Affordance primaryAffordance;
 
@@ -50,8 +50,19 @@ public class AffordanceCustomizer implements CustomizableAffordance<AffordanceCu
         AffordanceModel affordanceModel = Objects.requireNonNull(primaryAffordance.iterator().next(),
                 "affordanceModel");
 
-        var affordances = Affordances.of(link.withSelfRel());
-        var newAffordance = affordances.afford(affordanceModel.getHttpMethod())
+        return from(primaryAffordance, null);
+    }
+
+    static AffordanceCustomizer from(@NonNull Affordance primaryAffordance, HttpMethod method) {
+        AffordanceModel affordanceModel = Objects.requireNonNull(primaryAffordance.iterator().next(),
+                "affordanceModel");
+
+        if(method == null) {
+            method = affordanceModel.getHttpMethod();
+        }
+
+        var affordances = Affordances.of(affordanceModel.getLink());
+        var newAffordance = affordances.afford(method)
                 .withName(affordanceModel.getName())
                 .withInput(affordanceModel.getInput())
                 .withOutput(affordanceModel.getOutput())

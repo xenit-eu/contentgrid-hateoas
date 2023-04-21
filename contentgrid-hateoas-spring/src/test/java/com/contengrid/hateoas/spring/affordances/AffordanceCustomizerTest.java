@@ -1,15 +1,15 @@
 package com.contengrid.hateoas.spring.affordances;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import com.contengrid.hateoas.spring.affordances.AffordanceCustomizerTest.TestRestController;
 import com.contentgrid.hateoas.spring.affordances.AffordanceCustomizer;
+import com.contentgrid.hateoas.spring.affordances.Affordances;
 import com.contentgrid.hateoas.spring.affordances.property.modifier.PropertyModifier;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
-import com.contengrid.hateoas.spring.affordances.AffordanceCustomizerTest.TestRestController;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -20,7 +20,6 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.config.EnableHypermediaSupport;
 import org.springframework.hateoas.config.EnableHypermediaSupport.HypermediaType;
-import org.springframework.hateoas.mediatype.Affordances;
 import org.springframework.http.HttpMethod;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -45,15 +44,12 @@ class AffordanceCustomizerTest {
         @GetMapping("/test/{id}")
         @ResponseBody
         public TestRestResource getTestResource(@PathVariable String id) {
-            var selfLink = Affordances.of(linkTo(testRestController.getTestResource(id)).withSelfRel())
-                    // to pin down the default affordance
-                    .afford(HttpMethod.HEAD)
-                    .toLink();
             return new TestRestResource("abc", "def")
-                    .add(selfLink
-                            .andAffordance(AffordanceCustomizer.afford(testRestController.patchTestResource(id, null))
-                                    .configure(affordance -> affordance.withName("patch"))
-                                    .build())
+                    .add(Affordances.on(testRestController.getTestResource(id))
+                            .withDefault()
+                            .andAffordance(AffordanceCustomizer.afford(testRestController.patchTestResource(id, null)).configure(affordance -> affordance.withName("patch")))
+                            .toLink()
+                            .withSelfRel()
                     );
         }
 
@@ -101,7 +97,7 @@ class AffordanceCustomizerTest {
 
         var affordanceModel = standardAffordance.getAffordanceModel(MediaTypes.HAL_FORMS_JSON);
 
-        assertThat(affordanceModel.getName()).isEqualTo("patch");
+        assertThat(affordanceModel.getName()).isEqualTo("patchTestResource");
         assertThat(affordanceModel.getHttpMethod()).isEqualTo(HttpMethod.PATCH);
         assertThat(affordanceModel.getLink().getHref()).isEqualTo("/test/abc");
         assertThat(affordanceModel.getInput().stream())
@@ -149,6 +145,9 @@ class AffordanceCustomizerTest {
                                 }
                             },
                             _templates: {
+                                default: {
+                                    method: "HEAD"
+                                },
                                 patch: {
                                     method: "PATCH",
                                     properties: [
