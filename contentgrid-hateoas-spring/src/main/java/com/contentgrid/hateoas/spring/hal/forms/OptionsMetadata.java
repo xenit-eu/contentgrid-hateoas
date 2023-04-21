@@ -6,6 +6,7 @@ import com.contentgrid.hateoas.spring.affordances.PropertyMetadataWithSelectedVa
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.function.Function;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.AffordanceModel.PropertyMetadata;
 import org.springframework.hateoas.mediatype.hal.forms.HalFormsOptions;
@@ -17,6 +18,7 @@ import org.springframework.hateoas.mediatype.hal.forms.HalFormsOptions;
  */
 @RequiredArgsConstructor
 public class OptionsMetadata implements Function<PropertyMetadata, HalFormsOptions> {
+    @NonNull
     private final Collection<?> defaultValues;
 
     public OptionsMetadata(Object... defaultValues) {

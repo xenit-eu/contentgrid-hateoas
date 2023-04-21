@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 import lombok.AccessLevel;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.Affordance;
 import org.springframework.hateoas.Link;
@@ -15,8 +16,10 @@ import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
  */
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class Affordances implements CustomizableAffordance<Affordances> {
+    @NonNull
     private final AffordanceCustomizer baseCustomizer;
     private final boolean includeBase;
+    @NonNull
     private final List<Affordance> affordances;
 
     /**

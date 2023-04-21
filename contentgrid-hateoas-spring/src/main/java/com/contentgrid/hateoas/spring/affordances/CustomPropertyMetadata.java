@@ -1,6 +1,7 @@
 package com.contentgrid.hateoas.spring.affordances;
 
 import java.util.Optional;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Delegate;
 import org.springframework.hateoas.AffordanceModel.PropertyMetadata;
@@ -9,6 +10,7 @@ import org.springframework.hateoas.AffordanceModel.PropertyMetadata;
 public class CustomPropertyMetadata implements PropertyMetadata {
 
     @Delegate
+    @NonNull
     private final PropertyMetadata delegate;
 
     public static CustomPropertyMetadata custom(PropertyMetadata propertyMetadata) {

@@ -2,8 +2,6 @@ package com.contentgrid.hateoas.spring.affordances;
 
 import java.util.List;
 import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 import lombok.NonNull;
@@ -21,7 +19,9 @@ import org.springframework.http.MediaType;
 @RequiredArgsConstructor
 public class CustomInputPayloadMetadata implements InputPayloadMetadata {
 
+    @NonNull
     private final InputPayloadMetadata delegate;
+    @NonNull
     private final PropertyModifier propertyModifier;
 
     public static CustomInputPayloadMetadata from(Class<?> clazz) {
@@ -50,19 +50,19 @@ public class CustomInputPayloadMetadata implements InputPayloadMetadata {
 
     @Override
     public @NonNull Stream<PropertyMetadata> stream() {
-        return Stream.concat(delegate.stream(), propertyModifier.get())
-                .filter(propertyModifier::test)
-                .map(propertyModifier::apply);
+        return Stream.concat(delegate.stream(), propertyModifier.addProperties())
+                .filter(propertyModifier::keepProperty)
+                .map(propertyModifier::customizeProperty);
     }
 
     @Override
     public <T extends Named> @NonNull T customize(@NonNull T target,
             @NonNull Function<PropertyMetadata, T> customizer) {
         return delegate.customize(target, propertyMetadata -> {
-            if (propertyModifier.test(propertyMetadata)) {
+            if (propertyModifier.keepProperty(propertyMetadata)) {
                 return target;
             }
-            return customizer.apply(propertyModifier.apply(propertyMetadata));
+            return customizer.apply(propertyModifier.customizeProperty(propertyMetadata));
         });
     }
 
@@ -87,9 +87,9 @@ public class CustomInputPayloadMetadata implements InputPayloadMetadata {
     }
 
     public interface PropertyModifier {
-        PropertyMetadata apply(PropertyMetadata metadata);
-        boolean test(PropertyMetadata metadata);
-        Stream<PropertyMetadata> get();
+        PropertyMetadata customizeProperty(PropertyMetadata metadata);
+        boolean keepProperty(PropertyMetadata metadata);
+        Stream<PropertyMetadata> addProperties();
 
         default PropertyModifier when(boolean condition) {
             return condition ? this : PropertyModifier.none();
@@ -163,35 +163,35 @@ public class CustomInputPayloadMetadata implements InputPayloadMetadata {
         private final PropertyModifier second;
 
         @Override
-        public PropertyMetadata apply(PropertyMetadata propertyMetadata) {
-            return second.apply(first.apply(propertyMetadata));
+        public PropertyMetadata customizeProperty(PropertyMetadata propertyMetadata) {
+            return second.customizeProperty(first.customizeProperty(propertyMetadata));
         }
 
         @Override
-        public boolean test(PropertyMetadata propertyMetadata) {
-            return first.test(propertyMetadata) && second.test(propertyMetadata);
+        public boolean keepProperty(PropertyMetadata propertyMetadata) {
+            return first.keepProperty(propertyMetadata) && second.keepProperty(propertyMetadata);
         }
 
         @Override
-        public Stream<PropertyMetadata> get() {
-            return Stream.concat(first.get(), second.get());
+        public Stream<PropertyMetadata> addProperties() {
+            return Stream.concat(first.addProperties(), second.addProperties());
         }
     }
 
     private static class NonePropertyModifier implements PropertyModifier {
 
         @Override
-        public PropertyMetadata apply(PropertyMetadata propertyMetadata) {
+        public PropertyMetadata customizeProperty(PropertyMetadata propertyMetadata) {
             return propertyMetadata;
         }
 
         @Override
-        public boolean test(PropertyMetadata propertyMetadata) {
+        public boolean keepProperty(PropertyMetadata propertyMetadata) {
             return true;
         }
 
         @Override
-        public Stream<PropertyMetadata> get() {
+        public Stream<PropertyMetadata> addProperties() {
             return Stream.empty();
         }
     }
@@ -203,7 +203,7 @@ public class CustomInputPayloadMetadata implements InputPayloadMetadata {
         private final Function<PropertyMetadata, PropertyMetadata> customizer;
 
         @Override
-        public PropertyMetadata apply(PropertyMetadata propertyMetadata) {
+        public PropertyMetadata customizeProperty(PropertyMetadata propertyMetadata) {
             if (propertyMetadata.hasName(propertyName)) {
                 return customizer.apply(propertyMetadata);
             }
@@ -211,12 +211,12 @@ public class CustomInputPayloadMetadata implements InputPayloadMetadata {
         }
 
         @Override
-        public boolean test(PropertyMetadata propertyMetadata) {
+        public boolean keepProperty(PropertyMetadata propertyMetadata) {
             return true;
         }
 
         @Override
-        public Stream<PropertyMetadata> get() {
+        public Stream<PropertyMetadata> addProperties() {
             return Stream.empty();
         }
     }
@@ -227,17 +227,17 @@ public class CustomInputPayloadMetadata implements InputPayloadMetadata {
         private final String propertyName;
 
         @Override
-        public PropertyMetadata apply(PropertyMetadata propertyMetadata) {
+        public PropertyMetadata customizeProperty(PropertyMetadata propertyMetadata) {
             return propertyMetadata;
         }
 
         @Override
-        public boolean test(PropertyMetadata propertyMetadata) {
+        public boolean keepProperty(PropertyMetadata propertyMetadata) {
             return !propertyMetadata.hasName(propertyName);
         }
 
         @Override
-        public Stream<PropertyMetadata> get() {
+        public Stream<PropertyMetadata> addProperties() {
             return Stream.empty();
         }
     }
@@ -247,17 +247,17 @@ public class CustomInputPayloadMetadata implements InputPayloadMetadata {
         private final PropertyMetadata metadata;
 
         @Override
-        public PropertyMetadata apply(PropertyMetadata propertyMetadata) {
+        public PropertyMetadata customizeProperty(PropertyMetadata propertyMetadata) {
             return propertyMetadata;
         }
 
         @Override
-        public boolean test(PropertyMetadata propertyMetadata) {
+        public boolean keepProperty(PropertyMetadata propertyMetadata) {
             return true;
         }
 
         @Override
-        public Stream<PropertyMetadata> get() {
+        public Stream<PropertyMetadata> addProperties() {
             return Stream.of(metadata);
         }
     }

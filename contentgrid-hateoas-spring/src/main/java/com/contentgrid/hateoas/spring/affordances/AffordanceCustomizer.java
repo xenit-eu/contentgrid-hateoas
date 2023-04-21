@@ -5,6 +5,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import java.util.Objects;
 import java.util.function.UnaryOperator;
 import lombok.AccessLevel;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.With;
 import org.springframework.hateoas.Affordance;
@@ -20,9 +21,11 @@ import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class AffordanceCustomizer implements CustomizableAffordance<AffordanceCustomizer> {
 
+    @NonNull
     private final Affordance primaryAffordance;
 
     @With(value = AccessLevel.PRIVATE)
+    @NonNull
     private final ConfigurableAffordance configurableAffordance;
 
     /**
