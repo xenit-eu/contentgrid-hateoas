@@ -1,0 +1,9 @@
+plugins {
+    id 'eu.xenit.enterprise-conventions.oss' version '0.3.0'
+}
+
+rootProject.name = 'contentgrid-hateoas'
+
+include 'contentgrid-hateoas-spring'
+include 'contentgrid-pagination:contentgrid-pagination-api'
+
