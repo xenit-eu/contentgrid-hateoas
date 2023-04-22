@@ -1,7 +1,22 @@
 plugins {
     id 'java-library'
+    id 'maven-publish'
 }
 
 repositories {
     mavenCentral()
+}
+
+dependencies {
+    api platform("org.springframework.boot:spring-boot-dependencies:2.7.11")
+
+    compileOnly 'org.projectlombok:lombok:1.18.26'
+    annotationProcessor 'org.projectlombok:lombok:1.18.26'
+
+    api project(":contentgrid-pagination:contentgrid-pagination-api")
+
+    implementation 'org.springframework.hateoas:spring-hateoas'
+    implementation 'org.springframework:spring-webmvc'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations'
+
 }
