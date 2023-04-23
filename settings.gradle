@@ -8,6 +8,12 @@ plugins {
     id 'eu.xenit.enterprise-conventions.oss'
 }
 
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+    }
+}
+
 rootProject.name = 'contentgrid-hateoas'
 
 include 'contentgrid-hateoas-spring'
