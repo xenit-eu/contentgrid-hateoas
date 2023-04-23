@@ -1,4 +1,4 @@
-package com.contentgrid.hateoas.spring.hal.forms;
+package com.contentgrid.hateoas.spring.affordances.configuration;
 
 import com.contentgrid.hateoas.spring.affordances.property.CustomPropertyMetadata;
 import com.contentgrid.hateoas.spring.affordances.property.PropertyMetadataWithAllowedValues;

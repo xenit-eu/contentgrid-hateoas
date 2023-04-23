@@ -1,5 +1,6 @@
 package com.contentgrid.hateoas.spring.affordances.property;
 
+import com.contentgrid.hateoas.spring.affordances.configuration.OptionsMetadata;
 import java.util.Optional;
 import java.util.function.Function;
 import lombok.NonNull;
@@ -13,7 +14,7 @@ import org.springframework.hateoas.AffordanceModel.PropertyMetadata;
  * Extended customizations are not part of the Spring HATEOAS {@link PropertyMetadata} API, but are a layer on top of it,
  * and must explicitly be handled in {@link org.springframework.hateoas.mediatype.hal.forms.HalFormsConfiguration}
  *
- * @see com.contentgrid.hateoas.spring.hal.forms.OptionsMetadata for configuring {@link org.springframework.hateoas.mediatype.hal.forms.HalFormsConfiguration#withOptions(Class, String, Function)} based on custom metadata
+ * @see OptionsMetadata for configuring {@link org.springframework.hateoas.mediatype.hal.forms.HalFormsConfiguration#withOptions(Class, String, Function)} based on custom metadata
  */
 @RequiredArgsConstructor
 public class CustomPropertyMetadata implements PropertyMetadata {
