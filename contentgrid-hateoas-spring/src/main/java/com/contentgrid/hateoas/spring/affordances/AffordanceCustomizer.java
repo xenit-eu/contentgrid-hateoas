@@ -47,9 +47,6 @@ public class AffordanceCustomizer implements CustomizableAffordance<AffordanceCu
 
         var primaryAffordance = Objects.requireNonNull(link.getAffordances().get(0), "primaryAffordance");
 
-        AffordanceModel affordanceModel = Objects.requireNonNull(primaryAffordance.iterator().next(),
-                "affordanceModel");
-
         return from(primaryAffordance, null);
     }
 
