@@ -45,7 +45,7 @@ class AffordanceCustomizerTest {
         @ResponseBody
         public TestRestResource getTestResource(@PathVariable String id) {
             return new TestRestResource("abc", "def")
-                    .add(Affordances.on(testRestController.getTestResource(id))
+                    .add(Affordances.of(testRestController.getTestResource(id))
                             .withDefault()
                             .andAffordance(AffordanceCustomizer.afford(testRestController.patchTestResource(id, null)).configure(affordance -> affordance.withName("patch")))
                             .toLink()

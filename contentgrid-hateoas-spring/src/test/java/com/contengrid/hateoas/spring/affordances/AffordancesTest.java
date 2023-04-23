@@ -18,7 +18,7 @@ import org.springframework.http.HttpMethod;
 class AffordancesTest {
     @Test
     void defaultAfford() {
-        var standardAffordances = Affordances.on(methodOn(TestRestController.class).patchTestResource("abc", null));
+        var standardAffordances = Affordances.of(methodOn(TestRestController.class).patchTestResource("abc", null));
 
         assertThat(standardAffordances.stream()).satisfiesExactly(affordance -> {
             assertThat((AffordanceModel)affordance.getAffordanceModel(MediaTypes.HAL_FORMS_JSON)).satisfies(affordanceModel -> {
@@ -31,7 +31,7 @@ class AffordancesTest {
 
     @Test
     void additionalAfford() {
-        var standardAffordances = Affordances.on(methodOn(TestRestController.class).patchTestResource("abc", null))
+        var standardAffordances = Affordances.of(methodOn(TestRestController.class).patchTestResource("abc", null))
                 .configure(configurableAffordance -> configurableAffordance.withName("someName"))
                 .additionally(additionalCustomizer -> additionalCustomizer.configureInput(PropertyModifier.drop("name")));
 
@@ -65,7 +65,7 @@ class AffordancesTest {
 
     @Test
     void addAffordance() {
-        var affordances = Affordances.on(methodOn(TestRestController.class).getTestResource("abc"))
+        var affordances = Affordances.of(methodOn(TestRestController.class).getTestResource("abc"))
                 .andAffordance(AffordanceCustomizer.afford(methodOn(TestRestController.class).patchTestResource("def", null)));
 
         assertThat(affordances.stream()).satisfiesExactly(
@@ -88,7 +88,7 @@ class AffordancesTest {
 
     @Test
     void withDefault_get_method() {
-        var affordances = Affordances.on(methodOn(TestRestController.class).getTestResource("abc"))
+        var affordances = Affordances.of(methodOn(TestRestController.class).getTestResource("abc"))
                 .andAffordance(AffordanceCustomizer.afford(methodOn(TestRestController.class).patchTestResource("xyz", null)))
                 .withDefault();
 
@@ -119,7 +119,7 @@ class AffordancesTest {
 
     @Test
     void withDefault_patch_method() {
-        var affordances = Affordances.on(methodOn(TestRestController.class).patchTestResource("abc", null))
+        var affordances = Affordances.of(methodOn(TestRestController.class).patchTestResource("abc", null))
                 .andAffordance(AffordanceCustomizer.afford(methodOn(TestRestController.class).patchTestResource("xyz", null)))
                 .withDefault();
 
@@ -150,7 +150,7 @@ class AffordancesTest {
 
     @Test
     void withDefault_onlyAdditional() {
-        var affordances = Affordances.on(methodOn(TestRestController.class).getTestResource("abc"))
+        var affordances = Affordances.of(methodOn(TestRestController.class).getTestResource("abc"))
                 .withDefault()
                 .andAffordance(AffordanceCustomizer.afford(methodOn(TestRestController.class).patchTestResource("xyz", null)))
                 .onlyAdditional();
@@ -175,9 +175,9 @@ class AffordancesTest {
 
     @Test
     void addAffordances() {
-        var affordances = Affordances.on(methodOn(TestRestController.class).getTestResource("abc"))
+        var affordances = Affordances.of(methodOn(TestRestController.class).getTestResource("abc"))
                 .andAffordances(
-                        Affordances.on(methodOn(TestRestController.class).patchTestResource("xyz", null))
+                        Affordances.of(methodOn(TestRestController.class).patchTestResource("xyz", null))
                                 .additionally(customizer -> customizer.configure(affordance -> affordance.withName("patch")))
                 );
         assertThat(affordances.stream()).satisfiesExactly(
@@ -207,7 +207,7 @@ class AffordancesTest {
 
     @Test
     void toLink_basic() {
-        var link = Affordances.on(methodOn(TestRestController.class).getTestResource("abc")).toLink()
+        var link = Affordances.of(methodOn(TestRestController.class).getTestResource("abc")).toLink()
                 .withRel("testResource");
 
         assertThat(link.getHref()).isEqualTo("/test/abc");
@@ -224,7 +224,7 @@ class AffordancesTest {
 
     @Test
     void toLink_default_and_additional() {
-        var link = Affordances.on(methodOn(TestRestController.class).getTestResource("abc"))
+        var link = Affordances.of(methodOn(TestRestController.class).getTestResource("abc"))
                 .withDefault()
                 .andAffordance(AffordanceCustomizer.afford(methodOn(TestRestController.class).patchTestResource("xyz", null)))
                 .toLink()

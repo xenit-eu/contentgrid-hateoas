@@ -1,6 +1,5 @@
 package com.contentgrid.hateoas.spring.hal.forms;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import com.contentgrid.hateoas.spring.affordances.AffordanceCustomizer;
@@ -11,13 +10,10 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import javax.websocket.server.PathParam;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.Value;
 import lombok.With;
@@ -29,7 +25,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
-import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.config.EnableHypermediaSupport;
 import org.springframework.hateoas.config.EnableHypermediaSupport.HypermediaType;
 import org.springframework.hateoas.mediatype.hal.HalConfiguration;
@@ -45,10 +40,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.servlet.function.EntityResponse;
 
 @WebMvcTest(TestController.class)
 class OptionsMetadataTest {
@@ -70,10 +63,10 @@ class OptionsMetadataTest {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND);
             }
             return EntityModel.of(resource)
-                    .add(Affordances.on(methodOn(TestController.class).getResource(name))
+                    .add(Affordances.of(methodOn(TestController.class).getResource(name))
                             .withDefault()
                             .andAffordances(
-                                    Affordances.on(methodOn(TestController.class).deleteResource(name))
+                                    Affordances.of(methodOn(TestController.class).deleteResource(name))
                                             .additionally(affordanceCustomizer -> affordanceCustomizer.configure(affordance -> affordance.withName("delete")))
                             )
                             .andAffordance(

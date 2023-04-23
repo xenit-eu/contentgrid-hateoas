@@ -42,7 +42,7 @@ public class Affordances implements CustomizableAffordance<Affordances> {
      * configure the affordances.
      *
      * <pre>
-     * Affordances updateEmployee = Affordances.on(methodOn(EmployeeController.class).updateEmployee(null, id))
+     * Affordances updateEmployee = Affordances.of(methodOn(EmployeeController.class).updateEmployee(null, id))
      *                              .configure(affordanceBuilder -> affordanceBuilder.withInput(Employee.class))
      *                              .additionally(affordanceCustomizer -> affordanceCustomizer.configure(affordanceBuilder -> affordanceBuilder.withName("patch")))
      *                              ;
@@ -51,7 +51,7 @@ public class Affordances implements CustomizableAffordance<Affordances> {
      * This creates an affordance to the updateEmployee method and modifies the input to be an Employee type,
      * then creates an additional affordance with a different name.
      */
-    public static Affordances on(Object invocationValue) {
+    public static Affordances of(Object invocationValue) {
         var customizer = AffordanceCustomizer.afford(invocationValue);
         return new Affordances(customizer, customizer.build().iterator().next().getLink(), true, null, List.of());
     }
