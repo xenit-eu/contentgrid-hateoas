@@ -1,14 +1,5 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
-}
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-
-    compileOnly 'org.projectlombok:lombok:1.18.26'
-    annotationProcessor 'org.projectlombok:lombok:1.18.26'
+    id 'io.freefair.lombok'
 }
