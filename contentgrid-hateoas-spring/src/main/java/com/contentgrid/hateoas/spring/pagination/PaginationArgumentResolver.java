@@ -30,11 +30,8 @@ import org.springframework.web.method.support.ModelAndViewContainer;
  * {@link MethodParameter}. {@link Pagination} resolution yields either
  * in a {@link Pagination} object or {@literal null} if {@link Pagination} cannot be resolved.
  *
- *
  * @author Mark Paluch
  * @author Toon Geens
- *
- * @see org.springframework.data.web.PageableArgumentResolver
  */
 public interface PaginationArgumentResolver extends HandlerMethodArgumentResolver {
 
