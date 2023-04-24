@@ -1,7 +1,4 @@
 allprojects {
-    pluginManager.withPlugin('maven-publish') {
-        apply from: "${rootDir}/gradle/publish.gradle"
-    }
     pluginManager.withPlugin('java-library') {
         java {
             toolchain {
@@ -10,9 +7,58 @@ allprojects {
             withSourcesJar()
             withJavadocJar()
         }
+    }
+    
+    plugins.withId("maven-publish") {
+        publishing {
+            publications {
+                all {
+                    pom {
+                        url = 'https://github.com/xenit-eu/contentgrid-hateoas'
+                        name = project.name
+                        description = project.description
 
-        repositories {
-            mavenCentral()
+                        scm {
+                            connection = 'scm:git:git@github.com:xenit-eu/contentgrid-hateoas.git'
+                            developerConnection = 'scm:git:git@github.com:xenit-eu/contentgrid-hateoas.git'
+                            url = 'https://github.com/xenit-eu/contentgrid-hateoas.git'
+                        }
+
+                        developers {
+                            developer {
+                                name = "XeniT"
+                                organization = "XeniT Solutions NV"
+                            }
+                        }
+
+                        licenses {
+                            license {
+                                name = 'The Apache License, Version 2.0'
+                                url = 'https://www.apache.org/licenses/LICENSE-2.0'
+                            }
+                        }
+                    }
+                }
+            }
+            repositories {
+                if("${project.version}".endsWith('-SNAPSHOT')) {
+                    sonatypeSnapshots {
+                        url = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+                        credentials {
+                            username = project.findProperty('sonatype_username')
+                            password = project.findProperty('sonatype_password')
+                        }
+                    }
+                } else {
+                    sonatypeMavenCentral {
+                        url = "https://s01.oss.sonatype.org/service/local/"
+                        credentials {
+                            username = project.findProperty('sonatype_username')
+                            password = project.findProperty('sonatype_password')
+                        }
+                    }
+                }
+            }
         }
     }
 }
