@@ -111,3 +111,33 @@ var link = Affordances.of(methodOn(EmployeeController.class).getEmployee(123))
 </li>
 
 </ol>
+
+### `CustomInputPayloadMetadata`
+
+Modifying the `InputPayloadMetadata` for an affordance without creating a custom class for every variation.
+
+`InputPayloadMetadata` contains a list of all properties that will be part of the affordance expected input.
+
+For a basic case, using `ConfigurableAffordance#withInput(Class)` will suffice, but in specialized cases, it may be that
+some input properties are only conditionally valid and you need to make them read-only or even hide them completely.
+
+By using `PropertyModifier`s, these customizations can be applied in a simple way.
+
+```java
+CustomPropertyMetadata.from(EmployeeResource.class)
+        .with(PropertyModifier.addSelectedValue("department", employee.getDepartment()))
+        .with(PropertyModifier.drop("department").when(!allowedToModifyDepartment))
+```
+
+To use `PropertyModifier#addSelectedValue()` or `PropertyModifier#addAllowedValues()` to configure options for a property,
+it is necessary to use `OptionsMetadata` in the `HalFormsConfiguration` so a mapping is properly set up.
+
+```java
+@Bean
+HalFormsConfiguration halFormsConfiguration(HalConfiguration halConfiguration) {
+   return new HalFormsConfiguration(halConfiguration)
+           .withOptions(EmployeeResource.class, "department", new OptionsMetadata(Department.values()));
+}
+```
+
+## Pagination
