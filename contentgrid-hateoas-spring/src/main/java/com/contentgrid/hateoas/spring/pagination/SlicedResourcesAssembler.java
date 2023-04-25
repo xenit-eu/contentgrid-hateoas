@@ -1,7 +1,5 @@
 package com.contentgrid.hateoas.spring.pagination;
 
-import static org.springframework.web.util.UriComponentsBuilder.fromUri;
-
 import com.contentgrid.hateoas.pagination.api.Pagination;
 import com.contentgrid.hateoas.pagination.api.PaginationControls;
 import com.contentgrid.hateoas.pagination.api.Slice;
@@ -48,15 +46,9 @@ public class SlicedResourcesAssembler<T> implements RepresentationModelAssembler
     }
 
     private <S extends RepresentationModel<?>> SlicedModel<S> createModel(@NonNull Slice<S> slice,
-            /*@NonNull RepresentationModelAssembler<S, R> assembler, */
             Optional<Link> link) {
 
         Assert.notNull(slice, "Slice must not be null");
-//        Assert.notNull(assembler, "ResourceAssembler must not be null");
-
-        // List<R> resources = new ArrayList<>(page.getNumberOfElements());
-
-//        var content = slice.map(assembler::toModel).getContent();
         var metadata = asSliceMetadata(slice);
         var model = SlicedModel.of(slice.getContent(), metadata);
 

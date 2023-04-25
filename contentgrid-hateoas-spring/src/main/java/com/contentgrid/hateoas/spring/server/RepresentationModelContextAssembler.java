@@ -55,7 +55,7 @@ public interface RepresentationModelContextAssembler<T, D extends Representation
 	}
 
 	default RepresentationModelAssembler<T, D> withContext(C context) {
-		return new RepresentationModelAssembler<T, D>() {
+		return new RepresentationModelAssembler<>() {
 
 			@Override
 			public D toModel(T entity) {
