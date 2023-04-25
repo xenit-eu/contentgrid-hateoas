@@ -22,7 +22,7 @@ public interface Slice<T> extends Iterable<T>, PaginationControls {
     List<T> getContent();
 
     /**
-     * @return the {@link Pagination} that was used for retrieving this slice
+     * @return the {@link Pagination} that was used to request the current {@link Slice}.
      */
     Pagination getPagination();
 
