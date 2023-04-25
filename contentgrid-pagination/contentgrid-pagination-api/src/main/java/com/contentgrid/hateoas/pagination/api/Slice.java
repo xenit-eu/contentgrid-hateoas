@@ -61,6 +61,10 @@ public interface Slice<T> extends Iterable<T> {
         );
     }
 
+    default <R> R collect(Function<Slice<T>, R> collector) {
+        return collector.apply(this);
+    }
+
     class DefaultSlice<T> implements Slice<T> {
 
         private final List<T> content;
