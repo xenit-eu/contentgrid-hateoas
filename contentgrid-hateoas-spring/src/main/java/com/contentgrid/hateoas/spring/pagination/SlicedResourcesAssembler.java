@@ -60,7 +60,7 @@ public class SlicedResourcesAssembler<T> implements RepresentationModelAssembler
         var metadata = asSliceMetadata(slice);
         var model = SlicedModel.of(slice.getContent(), metadata);
 
-        return addPaginationLinks(model, slice.getPagination(), link);
+        return addPaginationLinks(model, slice, link);
     }
 
     private PaginationMetadata asSliceMetadata(@NonNull Slice<?> slice) {

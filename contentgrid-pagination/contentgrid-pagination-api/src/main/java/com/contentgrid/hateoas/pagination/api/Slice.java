@@ -2,6 +2,8 @@ package com.contentgrid.hateoas.pagination.api;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import lombok.NonNull;
 
@@ -10,7 +12,7 @@ import lombok.NonNull;
  *
  * @param <T> The type of the items in this slice
  */
-public interface Slice<T> extends Iterable<T> {
+public interface Slice<T> extends Iterable<T>, PaginationControls {
 
     /**
      * Returns the slice content as a {@link List}.
@@ -22,25 +24,31 @@ public interface Slice<T> extends Iterable<T> {
     /**
      * @return the {@link Pagination} that was used for retrieving this slice
      */
-    PaginationControls getPagination();
-
-    /**
-     * Returns {@literal true} if there is a next {@link Slice}.
-     *
-     * @return {@literal true} if there is a next {@link Slice}.
-     */
-    boolean hasNext();
-
-    Pagination nextPage();
-
-    Pagination previousPage();
-
-    Pagination firstPage();
+    Pagination getPagination();
 
     default Iterator<T> iterator() {
         return this.getContent().iterator();
     }
 
+    @Override
+    default Integer getLimit() {
+        return this.getPagination().getLimit();
+    }
+
+    @Override
+    default Optional<?> getReference() {
+        return this.getPagination().getReference();
+    }
+
+    @Override
+    default boolean isFirstPage() {
+        return this.getPagination().isFirstPage();
+    }
+
+    @Override
+    default Map<String, Object> getParameters() {
+        return this.getPagination().getParameters();
+    }
 
     static <T> Slice<T> empty() {
         return new DefaultSlice<>(List.of(), PaginationControls.unpaged());
@@ -57,7 +65,7 @@ public interface Slice<T> extends Iterable<T> {
     default <U> Slice<U> map(Function<? super T, U> converter) {
         return Slice.from(
                this.getContent().stream().map(converter).toList(),
-               this.getPagination()
+               this
         );
     }
 
@@ -65,7 +73,7 @@ public interface Slice<T> extends Iterable<T> {
 
         private final List<T> content;
 
-        private final PaginationControls pagination;
+        private final PaginationControls paginationControls;
 
         public DefaultSlice(@NonNull List<T> content, @NonNull PaginationControls pagination) {
             int effectiveLimit = pagination.getLimit() != null
@@ -73,7 +81,7 @@ public interface Slice<T> extends Iterable<T> {
                     : content.size();
 
             this.content = List.copyOf(content).subList(0, effectiveLimit);
-            this.pagination = pagination;
+            this.paginationControls = pagination;
         }
 
 
@@ -81,27 +89,32 @@ public interface Slice<T> extends Iterable<T> {
             return this.content;
         }
 
-        public PaginationControls getPagination() {
-            return this.pagination;
+        public Pagination getPagination() {
+            return this.paginationControls;
         }
 
         public boolean hasNext() {
-            return this.pagination.hasNext();
+            return this.paginationControls.hasNext();
         }
 
         @Override
-        public Pagination nextPage() {
-            return this.pagination.next();
+        public Pagination next() {
+            return this.paginationControls.next();
         }
 
         @Override
-        public Pagination previousPage() {
-            return this.pagination.previous();
+        public boolean hasPrevious() {
+            return this.paginationControls.hasPrevious();
         }
 
         @Override
-        public Pagination firstPage() {
-            return this.pagination.first();
+        public Pagination previous() {
+            return this.paginationControls.previous();
+        }
+
+        @Override
+        public Pagination first() {
+            return this.paginationControls.first();
         }
     }
 

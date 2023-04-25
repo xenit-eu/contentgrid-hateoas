@@ -13,7 +13,7 @@ public interface Pagination {
      */
     Integer getLimit();
 
-    Optional getReference();
+    Optional<?> getReference();
 
     boolean isFirstPage();
 
