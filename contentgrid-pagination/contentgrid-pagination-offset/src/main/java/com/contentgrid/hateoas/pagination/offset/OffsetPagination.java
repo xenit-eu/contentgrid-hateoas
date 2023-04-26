@@ -29,7 +29,7 @@ public interface OffsetPagination extends Pagination {
     Integer getPageSize();
 
     default boolean isFirstPage() {
-        return this.getPageNumber() == 0;
+        return this.getOffset() == 0;
     }
 
     default Map<String, Object> getParameters() {

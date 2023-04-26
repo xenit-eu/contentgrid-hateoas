@@ -2,6 +2,7 @@ package com.contentgrid.hateoas.pagination.api;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import lombok.NonNull;
 
@@ -10,7 +11,7 @@ import lombok.NonNull;
  *
  * @param <T> The type of the items in this slice
  */
-public interface Slice<T> extends Iterable<T> {
+public interface Slice<T> extends Iterable<T>, PaginationControls {
 
     /**
      * Returns the slice content as a {@link List}.
@@ -20,27 +21,29 @@ public interface Slice<T> extends Iterable<T> {
     List<T> getContent();
 
     /**
-     * @return the {@link Pagination} that was used for retrieving this slice
+     * @return the {@link Pagination} that was used to request the current {@link Slice}.
      */
-    PaginationControls getPagination();
-
-    /**
-     * Returns {@literal true} if there is a next {@link Slice}.
-     *
-     * @return {@literal true} if there is a next {@link Slice}.
-     */
-    boolean hasNext();
-
-    Pagination nextPage();
-
-    Pagination previousPage();
-
-    Pagination firstPage();
+    Pagination getPagination();
 
     default Iterator<T> iterator() {
         return this.getContent().iterator();
     }
 
+    /**
+     * Returns the number of elements currently on this {@link Slice}.
+     *
+     * @return the number of elements currently on this {@link Slice}.
+     */
+    default int getSize() {
+        return this.getContent().size();
+    }
+
+    /**
+     * @return the maximum number of items in this {@link Slice}. May be {@literal null}.
+     */
+    default Integer getLimit() {
+        return this.getPagination().getLimit();
+    }
 
     static <T> Slice<T> empty() {
         return new DefaultSlice<>(List.of(), PaginationControls.unpaged());
@@ -57,7 +60,7 @@ public interface Slice<T> extends Iterable<T> {
     default <U> Slice<U> map(Function<? super T, U> converter) {
         return Slice.from(
                this.getContent().stream().map(converter).toList(),
-               this.getPagination()
+               this
         );
     }
 
@@ -65,15 +68,15 @@ public interface Slice<T> extends Iterable<T> {
 
         private final List<T> content;
 
-        private final PaginationControls pagination;
+        private final PaginationControls controls;
 
-        public DefaultSlice(@NonNull List<T> content, @NonNull PaginationControls pagination) {
-            int effectiveLimit = pagination.getLimit() != null
-                    ? Math.min(pagination.getLimit(), content.size())
+        public DefaultSlice(@NonNull List<T> content, @NonNull PaginationControls controls) {
+            int effectiveLimit = controls.current().getLimit() != null
+                    ? Math.min(controls.current().getLimit(), content.size())
                     : content.size();
 
             this.content = List.copyOf(content).subList(0, effectiveLimit);
-            this.pagination = pagination;
+            this.controls = controls;
         }
 
 
@@ -81,27 +84,28 @@ public interface Slice<T> extends Iterable<T> {
             return this.content;
         }
 
-        public PaginationControls getPagination() {
-            return this.pagination;
-        }
-
-        public boolean hasNext() {
-            return this.pagination.hasNext();
+        public Pagination getPagination() {
+            return this.controls.current();
         }
 
         @Override
-        public Pagination nextPage() {
-            return this.pagination.next();
+        public Pagination current() {
+            return this.controls.current();
         }
 
         @Override
-        public Pagination previousPage() {
-            return this.pagination.previous();
+        public Optional<Pagination> next() {
+            return this.controls.next();
         }
 
         @Override
-        public Pagination firstPage() {
-            return this.pagination.first();
+        public Optional<Pagination> previous() {
+            return this.controls.previous();
+        }
+
+        @Override
+        public Pagination first() {
+            return this.controls.first();
         }
     }
 

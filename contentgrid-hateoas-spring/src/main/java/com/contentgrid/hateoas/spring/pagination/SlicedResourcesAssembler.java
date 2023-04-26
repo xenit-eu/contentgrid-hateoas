@@ -1,7 +1,5 @@
 package com.contentgrid.hateoas.spring.pagination;
 
-import static org.springframework.web.util.UriComponentsBuilder.fromUri;
-
 import com.contentgrid.hateoas.pagination.api.Pagination;
 import com.contentgrid.hateoas.pagination.api.PaginationControls;
 import com.contentgrid.hateoas.pagination.api.Slice;
@@ -23,10 +21,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class SlicedResourcesAssembler<T> implements RepresentationModelAssembler<Slice<T>, SlicedModel<?>> {
 
     private final PaginationHandlerMethodArgumentResolver paginationResolver;
-
-    public SlicedResourcesAssembler() {
-        this(new PaginationHandlerMethodArgumentResolver());
-    }
 
     @Override
     public SlicedModel<EntityModel<T>> toModel(Slice<T> slice) {
@@ -60,7 +54,7 @@ public class SlicedResourcesAssembler<T> implements RepresentationModelAssembler
         var metadata = asSliceMetadata(slice);
         var model = SlicedModel.of(slice.getContent(), metadata);
 
-        return addPaginationLinks(model, slice.getPagination(), link);
+        return addPaginationLinks(model, slice, link);
     }
 
     private PaginationMetadata asSliceMetadata(@NonNull Slice<?> slice) {
@@ -76,18 +70,14 @@ public class SlicedResourcesAssembler<T> implements RepresentationModelAssembler
             model.add(createLink(base, controls.first(), IanaLinkRelations.FIRST));
         }
 
-        if (controls.hasPrevious()) {
-            model.add(createLink(base, controls.previous(), IanaLinkRelations.PREV));
-        }
+        controls.previous().ifPresent(previous -> model.add(createLink(base, previous, IanaLinkRelations.PREV)));
 
         Link selfLink = link.map(Link::withSelfRel)//
-                .orElseGet(() -> createLink(base, controls, IanaLinkRelations.SELF));
+                .orElseGet(() -> createLink(base, controls.current(), IanaLinkRelations.SELF));
 
         model.add(selfLink);
 
-        if (controls.hasNext()) {
-            model.add(createLink(base, controls.next(), IanaLinkRelations.NEXT));
-        }
+        controls.next().ifPresent(next -> model.add(createLink(base, next, IanaLinkRelations.NEXT)));
 
         return model;
     }

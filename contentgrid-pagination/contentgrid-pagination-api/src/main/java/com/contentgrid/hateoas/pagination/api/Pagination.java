@@ -13,7 +13,7 @@ public interface Pagination {
      */
     Integer getLimit();
 
-    Optional getReference();
+    Optional<?> getReference();
 
     boolean isFirstPage();
 
@@ -60,7 +60,7 @@ public interface Pagination {
         }
 
         @Override
-        public Optional getReference() {
+        public Optional<?> getReference() {
             return Optional.empty();
         }
 
@@ -77,7 +77,7 @@ public interface Pagination {
 
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    class Unpaged implements PaginationControls {
+    class Unpaged implements PaginationControls, Pagination {
 
         static Unpaged instance() {
             return new Unpaged();
@@ -103,28 +103,19 @@ public interface Pagination {
             return Map.of();
         }
 
-        public boolean isPaged() {
-            return false;
-        }
-
         @Override
-        public boolean hasNext() {
-            return false;
-        }
-
-        @Override
-        public Pagination next() {
+        public Pagination current() {
             return this;
         }
 
         @Override
-        public boolean hasPrevious() {
-            return false;
+        public Optional<Pagination> next() {
+            return Optional.empty();
         }
 
         @Override
-        public Pagination previous() {
-            return this;
+        public Optional<Pagination> previous() {
+            return Optional.empty();
         }
 
         @Override
