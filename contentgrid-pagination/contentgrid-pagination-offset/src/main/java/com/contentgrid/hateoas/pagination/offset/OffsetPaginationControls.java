@@ -2,18 +2,15 @@ package com.contentgrid.hateoas.pagination.offset;
 
 import com.contentgrid.hateoas.pagination.api.Pagination;
 import com.contentgrid.hateoas.pagination.api.PaginationControls;
-import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
-class OffsetPaginationControls implements OffsetPagination, PaginationControls {
+class OffsetPaginationControls implements PaginationControls {
 
-    @Getter
     private final long offset;
-
     private final int pageSize;
 
     @Getter
@@ -21,36 +18,15 @@ class OffsetPaginationControls implements OffsetPagination, PaginationControls {
     private final boolean hasNext;
 
     @Override
-    public Integer getLimit() {
-        return this.pageSize;
-    }
-
-    @Override
-    public Optional<Long> getReference() {
-        return Optional.of(this.getOffset());
-    }
-
-    @Override
-    public boolean isFirstPage() {
-        return this.getPageNumber() == 0;
-    }
-
-
-    @Override
-    public int getPageNumber() {
-        return (int) offset / pageSize;
-    }
-
-    @Override
-    public Integer getPageSize() {
-        return this.pageSize;
+    public OffsetPagination current() {
+        return OffsetPagination.offset(this.offset, this.pageSize);
     }
 
     @Override
     public Pagination next() {
         return this.hasNext()
-                ? OffsetPagination.offset(this.getOffset() + this.getPageSize(), this.getPageSize())
-                : this;
+                ? OffsetPagination.offset(this.offset + this.pageSize, this.pageSize)
+                : this.current();
     }
 
     @Override
@@ -60,11 +36,11 @@ class OffsetPaginationControls implements OffsetPagination, PaginationControls {
 
     @Override
     public Pagination previous() {
-        return OffsetPagination.offset(Math.max(this.getOffset() - this.getPageSize(), 0), this.getPageSize());
+        return OffsetPagination.offset(Math.max(this.offset - this.pageSize, 0), this.pageSize);
     }
 
     @Override
     public Pagination first() {
-        return OffsetPagination.offset(0, this.getPageSize());
+        return OffsetPagination.offset(0, this.pageSize);
     }
 }

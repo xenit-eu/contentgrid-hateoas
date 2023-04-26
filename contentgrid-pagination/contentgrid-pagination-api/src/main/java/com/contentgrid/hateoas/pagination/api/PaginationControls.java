@@ -1,6 +1,13 @@
 package com.contentgrid.hateoas.pagination.api;
 
-public interface PaginationControls extends Pagination {
+import com.contentgrid.hateoas.pagination.api.Pagination.Unpaged;
+
+public interface PaginationControls {
+
+    /**
+     * @return the {@link Pagination} that was used to request the current page of data.
+     */
+    Pagination current();
 
     /**
      * @return {@literal true} if there is a next page of data.

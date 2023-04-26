@@ -60,7 +60,7 @@ public interface Pagination {
         }
 
         @Override
-        public Optional getReference() {
+        public Optional<?> getReference() {
             return Optional.empty();
         }
 
@@ -77,7 +77,7 @@ public interface Pagination {
 
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    class Unpaged implements PaginationControls {
+    class Unpaged implements PaginationControls, Pagination {
 
         static Unpaged instance() {
             return new Unpaged();
@@ -103,8 +103,9 @@ public interface Pagination {
             return Map.of();
         }
 
-        public boolean isPaged() {
-            return false;
+        @Override
+        public Pagination current() {
+            return this;
         }
 
         @Override

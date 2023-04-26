@@ -1,7 +1,5 @@
 package com.contentgrid.hateoas.spring.pagination;
 
-import static org.springframework.web.util.UriComponentsBuilder.fromUri;
-
 import com.contentgrid.hateoas.pagination.api.Pagination;
 import com.contentgrid.hateoas.pagination.api.PaginationControls;
 import com.contentgrid.hateoas.pagination.api.Slice;
@@ -23,10 +21,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class SlicedResourcesAssembler<T> implements RepresentationModelAssembler<Slice<T>, SlicedModel<?>> {
 
     private final PaginationHandlerMethodArgumentResolver paginationResolver;
-
-    public SlicedResourcesAssembler() {
-        this(new PaginationHandlerMethodArgumentResolver());
-    }
 
     @Override
     public SlicedModel<EntityModel<T>> toModel(Slice<T> slice) {
@@ -81,7 +75,7 @@ public class SlicedResourcesAssembler<T> implements RepresentationModelAssembler
         }
 
         Link selfLink = link.map(Link::withSelfRel)//
-                .orElseGet(() -> createLink(base, controls, IanaLinkRelations.SELF));
+                .orElseGet(() -> createLink(base, controls.current(), IanaLinkRelations.SELF));
 
         model.add(selfLink);
 
