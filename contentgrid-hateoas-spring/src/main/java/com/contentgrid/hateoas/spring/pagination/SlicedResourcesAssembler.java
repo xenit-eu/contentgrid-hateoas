@@ -70,18 +70,14 @@ public class SlicedResourcesAssembler<T> implements RepresentationModelAssembler
             model.add(createLink(base, controls.first(), IanaLinkRelations.FIRST));
         }
 
-        if (controls.hasPrevious()) {
-            model.add(createLink(base, controls.previous().orElse(null), IanaLinkRelations.PREV));
-        }
+        controls.previous().ifPresent(previous -> model.add(createLink(base, previous, IanaLinkRelations.PREV)));
 
         Link selfLink = link.map(Link::withSelfRel)//
                 .orElseGet(() -> createLink(base, controls.current(), IanaLinkRelations.SELF));
 
         model.add(selfLink);
 
-        if (controls.hasNext()) {
-            model.add(createLink(base, controls.next().orElse(null), IanaLinkRelations.NEXT));
-        }
+        controls.next().ifPresent(next -> model.add(createLink(base, next, IanaLinkRelations.NEXT)));
 
         return model;
     }
