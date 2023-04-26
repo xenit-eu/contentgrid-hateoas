@@ -2,6 +2,7 @@ package com.contentgrid.hateoas.pagination.offset;
 
 import com.contentgrid.hateoas.pagination.api.Pagination;
 import com.contentgrid.hateoas.pagination.api.PaginationControls;
+import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -23,10 +24,13 @@ class OffsetPaginationControls implements PaginationControls {
     }
 
     @Override
-    public Pagination next() {
-        return this.hasNext()
-                ? OffsetPagination.offset(this.offset + this.pageSize, this.pageSize)
-                : this.current();
+    public Optional<Pagination> next() {
+        if (!this.hasNext) {
+            return Optional.empty();
+        }
+
+        var next = OffsetPagination.offset(this.offset + this.pageSize, this.pageSize);
+        return Optional.of(next);
     }
 
     @Override
@@ -35,8 +39,13 @@ class OffsetPaginationControls implements PaginationControls {
     }
 
     @Override
-    public Pagination previous() {
-        return OffsetPagination.offset(Math.max(this.offset - this.pageSize, 0), this.pageSize);
+    public Optional<Pagination> previous() {
+        if (this.current().isFirstPage()) {
+            return Optional.empty();
+        }
+
+        var previous = OffsetPagination.offset(Math.max(this.offset - this.pageSize, 0), this.pageSize);
+        return Optional.of(previous);
     }
 
     @Override

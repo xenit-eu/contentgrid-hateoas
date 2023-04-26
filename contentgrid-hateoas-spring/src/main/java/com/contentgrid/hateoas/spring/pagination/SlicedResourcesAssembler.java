@@ -71,7 +71,7 @@ public class SlicedResourcesAssembler<T> implements RepresentationModelAssembler
         }
 
         if (controls.hasPrevious()) {
-            model.add(createLink(base, controls.previous(), IanaLinkRelations.PREV));
+            model.add(createLink(base, controls.previous().orElse(null), IanaLinkRelations.PREV));
         }
 
         Link selfLink = link.map(Link::withSelfRel)//
@@ -80,7 +80,7 @@ public class SlicedResourcesAssembler<T> implements RepresentationModelAssembler
         model.add(selfLink);
 
         if (controls.hasNext()) {
-            model.add(createLink(base, controls.next(), IanaLinkRelations.NEXT));
+            model.add(createLink(base, controls.next().orElse(null), IanaLinkRelations.NEXT));
         }
 
         return model;

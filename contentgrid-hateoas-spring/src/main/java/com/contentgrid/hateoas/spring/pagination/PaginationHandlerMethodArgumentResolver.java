@@ -42,6 +42,10 @@ public class PaginationHandlerMethodArgumentResolver implements PaginationArgume
 
         Assert.notNull(builder, "UriComponentsBuilder must not be null");
 
+        if (value == null) {
+            return;
+        }
+        
         if (!(value instanceof Pagination pagination)) {
             return;
         }

@@ -109,23 +109,13 @@ public interface Pagination {
         }
 
         @Override
-        public boolean hasNext() {
-            return false;
+        public Optional<Pagination> next() {
+            return Optional.empty();
         }
 
         @Override
-        public Pagination next() {
-            return this;
-        }
-
-        @Override
-        public boolean hasPrevious() {
-            return false;
-        }
-
-        @Override
-        public Pagination previous() {
-            return this;
+        public Optional<Pagination> previous() {
+            return Optional.empty();
         }
 
         @Override

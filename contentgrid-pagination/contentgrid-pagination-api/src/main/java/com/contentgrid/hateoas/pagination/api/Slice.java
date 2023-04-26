@@ -2,6 +2,7 @@ package com.contentgrid.hateoas.pagination.api;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import lombok.NonNull;
 
@@ -92,22 +93,13 @@ public interface Slice<T> extends Iterable<T>, PaginationControls {
             return this.controls.current();
         }
 
-        public boolean hasNext() {
-            return this.controls.hasNext();
-        }
-
         @Override
-        public Pagination next() {
+        public Optional<Pagination> next() {
             return this.controls.next();
         }
 
         @Override
-        public boolean hasPrevious() {
-            return this.controls.hasPrevious();
-        }
-
-        @Override
-        public Pagination previous() {
+        public Optional<Pagination> previous() {
             return this.controls.previous();
         }
 

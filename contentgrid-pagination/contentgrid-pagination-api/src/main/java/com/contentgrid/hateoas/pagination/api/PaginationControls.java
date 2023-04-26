@@ -1,6 +1,7 @@
 package com.contentgrid.hateoas.pagination.api;
 
 import com.contentgrid.hateoas.pagination.api.Pagination.Unpaged;
+import java.util.Optional;
 
 public interface PaginationControls {
 
@@ -12,36 +13,38 @@ public interface PaginationControls {
     /**
      * @return {@literal true} if there is a next page of data.
      */
-    boolean hasNext();
+    default boolean hasNext() {
+        return this.next().isPresent();
+    }
 
     /**
-     * Returns the {@link Pagination} to request the next page.
+     * Returns an {@link Optional} of {@link Pagination} to request the next page.
      * <p>
-     * Can be {@link Pagination#unpaged()} or {@code this} instance, in case the current page is already the last one or
-     * it is not possible to navigate to the next page. Clients should check {@link #hasNext()} before calling this
-     * method.
+     * In case the current page is already the last page or it is not possible to navigate to the next page, the
+     * returned value will be {@code Optional.empty()}
      *
-     * @return the {@link Pagination} to request the next page.
+     * @return an {@link Optional} of {@link Pagination} to request the next page.
      */
-    Pagination next();
+    Optional<Pagination> next();
 
     /**
      * Returns {@literal true} if there is data before the current page and if it is possible to navigate backwards.
      *
      * @return {@literal true} if it is possible to navigate to a previous page.
      */
-    boolean hasPrevious();
+    default boolean hasPrevious() {
+        return this.previous().isPresent();
+    }
 
     /**
      * Returns the {@link Pagination} to request the previous page.
      * <p>
-     * Can be {@link Pagination#unpaged()} or {@code this} instance, in case the current page is already the first page,
-     * or it is not possible to navigate backwards. Clients should check {@link #hasPrevious()} before calling this
-     * method.
+     * In case the current page is already the first page, or it is not possible to navigate backwards.
+     * Clients should check {@link #hasPrevious()} before calling this method.
      *
-     * @return the {@link Pagination} to request the previous page.
+     * @return an {@link Optional} of {@link Pagination} to request the previous page.
      */
-    Pagination previous();
+    Optional<Pagination> previous();
 
     /**
      * Returns the {@link Pagination} to request the first page.
