@@ -72,7 +72,7 @@ public class CustomInputPayloadMetadata implements InputPayloadMetadata {
     }
 
     @Override
-    public @NonNull InputPayloadMetadata withMediaTypes(@NonNull List<MediaType> mediaType) {
+    public @NonNull CustomInputPayloadMetadata withMediaTypes(@NonNull List<MediaType> mediaType) {
         return new CustomInputPayloadMetadata(delegate.withMediaTypes(mediaType), propertyModifier);
     }
 
