@@ -5,7 +5,7 @@ plugins {
 }
 
 dependencies {
-    api platform("org.springframework.boot:spring-boot-dependencies:2.7.14")
+    api platform("org.springframework.boot:spring-boot-dependencies:3.1.5")
 
     api project(":contentgrid-pagination:contentgrid-pagination-api")
 
