@@ -4,6 +4,7 @@ import com.contentgrid.hateoas.pagination.api.Pagination;
 import java.util.Map;
 import java.util.Optional;
 import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -53,6 +54,7 @@ public interface OffsetPagination extends Pagination {
 
 
     @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+    @EqualsAndHashCode
     class DefaultOffsetPagination implements OffsetPagination {
 
         @Getter

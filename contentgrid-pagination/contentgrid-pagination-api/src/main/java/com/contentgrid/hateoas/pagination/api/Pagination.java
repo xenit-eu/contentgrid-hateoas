@@ -3,6 +3,7 @@ package com.contentgrid.hateoas.pagination.api;
 import java.util.Map;
 import java.util.Optional;
 import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
@@ -50,6 +51,7 @@ public interface Pagination {
     }
 
     @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+    @EqualsAndHashCode
     class PageLimit implements Pagination {
 
         private final int limit;
@@ -77,6 +79,7 @@ public interface Pagination {
 
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @EqualsAndHashCode
     class Unpaged implements PaginationControls, Pagination {
 
         static Unpaged instance() {
@@ -101,6 +104,11 @@ public interface Pagination {
         @Override
         public Map<String, Object> getParameters() {
             return Map.of();
+        }
+
+        @Override
+        public boolean isUnpaged() {
+            return true;
         }
 
         @Override
