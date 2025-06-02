@@ -80,3 +80,9 @@ pluginManager.withPlugin('java-platform') {
         }
     }
 }
+
+pluginManager.withPlugin('base') {
+    tasks.named('check').configure {
+        dependsOn('checkMavenCentralRequirements')
+    }
+}
