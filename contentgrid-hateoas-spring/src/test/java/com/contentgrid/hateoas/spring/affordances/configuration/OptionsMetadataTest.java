@@ -1,12 +1,11 @@
-package com.contengrid.hateoas.spring.affordances.configuration;
+package com.contentgrid.hateoas.spring.affordances.configuration;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import com.contentgrid.hateoas.spring.affordances.AffordanceCustomizer;
 import com.contentgrid.hateoas.spring.affordances.Affordances;
-import com.contentgrid.hateoas.spring.affordances.configuration.OptionsMetadata;
 import com.contentgrid.hateoas.spring.affordances.property.modifier.PropertyModifier;
-import com.contengrid.hateoas.spring.affordances.configuration.OptionsMetadataTest.TestController;
+import com.contentgrid.hateoas.spring.affordances.configuration.OptionsMetadataTest.TestController;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -23,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;

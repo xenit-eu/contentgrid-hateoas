@@ -1,11 +1,9 @@
-package com.contengrid.hateoas.spring.affordances;
+package com.contentgrid.hateoas.spring.affordances;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import com.contengrid.hateoas.spring.affordances.AffordanceCustomizerTest.TestRestController;
-import com.contentgrid.hateoas.spring.affordances.AffordanceCustomizer;
-import com.contentgrid.hateoas.spring.affordances.Affordances;
+import com.contentgrid.hateoas.spring.affordances.AffordanceCustomizerTest.TestRestController;
 import com.contentgrid.hateoas.spring.affordances.property.modifier.PropertyModifier;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
