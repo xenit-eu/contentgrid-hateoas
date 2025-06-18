@@ -1,12 +1,9 @@
-package com.contengrid.hateoas.spring.affordances.property;
+package com.contentgrid.hateoas.spring.affordances.property;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.contentgrid.hateoas.spring.affordances.CustomInputPayloadMetadata;
 import com.contentgrid.hateoas.spring.affordances.property.modifier.PropertyModifier;
-import com.contentgrid.hateoas.spring.affordances.property.CustomPropertyMetadata;
-import com.contentgrid.hateoas.spring.affordances.property.PropertyMetadataWithAllowedValues;
-import com.contentgrid.hateoas.spring.affordances.property.PropertyMetadataWithSelectedValue;
 import java.util.List;
 import lombok.Data;
 import org.junit.jupiter.api.Test;
