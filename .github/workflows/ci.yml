@@ -23,7 +23,6 @@ jobs:
       - name: Publish
         if: ${{ github.ref == 'refs/heads/main' || startswith(github.ref, 'refs/tags/') }}
         env:
-#          JRELEASER_GPG_PUBLIC_KEY: ${{}}
           JRELEASER_GPG_SECRET_KEY: ${{ secrets.MAVEN_CENTRAL_GPG_KEY }}
           JRELEASER_GPG_PASSPHRASE: ${{ secrets.MAVEN_CENTRAL_GPG_PASSWORD }}
           JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.SONATYPE_CENTRAL_USERNAME }}
