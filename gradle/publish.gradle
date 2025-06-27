@@ -49,7 +49,7 @@ jreleaser {
                     active = 'ALWAYS' // both 'RELEASE' and 'SNAPSHOT' enabled
                     url = 'https://central.sonatype.com/api/v1/publisher'
                     applyMavenCentralRules = true
-                    stagingRepository('target/staging-deploy')
+                    stagingRepository(layout.buildDirectory.dir('staging-deploy'))
                 }
             }
         }
