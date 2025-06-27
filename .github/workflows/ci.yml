@@ -27,4 +27,4 @@ jobs:
           JRELEASER_GPG_PASSPHRASE: ${{ secrets.MAVEN_CENTRAL_GPG_PASSWORD }}
           JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.SONATYPE_CENTRAL_USERNAME }}
           JRELEASER_MAVENCENTRAL_PASSWORD: ${{ secrets.SONATYPE_CENTRAL_PASSWORD }}
-        run: ./gradlew publish
+        run: ./gradlew jreleaserPublish
