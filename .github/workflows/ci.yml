@@ -20,11 +20,14 @@ jobs:
           cache: 'gradle'
       - name: Build with Gradle
         run: ./gradlew check
-      - name: Publish
+      - name: Publish artifacts
+        if: ${{ github.ref == 'refs/heads/main' || startswith(github.ref, 'refs/tags/') }}
+        run: ./gradlew publish
+      - name: Deploy artifacts
         if: ${{ github.ref == 'refs/heads/main' || startswith(github.ref, 'refs/tags/') }}
         env:
           JRELEASER_GPG_SECRET_KEY: ${{ secrets.MAVEN_CENTRAL_GPG_KEY }}
           JRELEASER_GPG_PASSPHRASE: ${{ secrets.MAVEN_CENTRAL_GPG_PASSWORD }}
           JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.SONATYPE_CENTRAL_USERNAME }}
           JRELEASER_MAVENCENTRAL_PASSWORD: ${{ secrets.SONATYPE_CENTRAL_PASSWORD }}
-        run: ./gradlew jreleaserPublish
+        run: ./gradlew jreleaserDeploy
