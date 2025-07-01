@@ -40,7 +40,6 @@ publishing {
 }
 
 jreleaser {
-    gitRootSearch = true // searches git root, needed with sub-projects
     signing {
         active = 'ALWAYS' // both 'RELEASE' and 'SNAPSHOT' enabled
         armored = true
@@ -59,9 +58,16 @@ jreleaser {
             }
         }
     }
+    // It is required to configure at least one release provider.
+    // But you can provide any non-existing non-empty GitHub token and skip creating tags and releases.
+    // see https://github.com/jreleaser/jreleaser/discussions/1725
+    gitRootSearch = true
     release {
         github {
-            enabled = false
+            enabled = true
+            skipTag = true
+            skipRelease = true
+            token = '__UNUSED__'
         }
     }
 }
