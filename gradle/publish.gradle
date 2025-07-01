@@ -40,11 +40,6 @@ publishing {
 }
 
 jreleaser {
-    signing {
-        active = 'ALWAYS' // both 'RELEASE' and 'SNAPSHOT' enabled
-        armored = true
-        verify = false // disables need for 'JRELEASER_GPG_PUBLIC_KEY'
-    }
     deploy {
         maven {
             mavenCentral {
