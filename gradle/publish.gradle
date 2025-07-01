@@ -39,6 +39,7 @@ publishing {
 }
 
 jreleaser {
+    gitRootSearch = true // searches git root, needed with sub-projects
     signing {
         active = 'ALWAYS' // both 'RELEASE' and 'SNAPSHOT' enabled
         armored = true
