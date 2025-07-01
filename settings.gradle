@@ -3,12 +3,12 @@ pluginManagement {
         id 'eu.xenit.enterprise-conventions.oss' version '0.5.2'
         id 'io.freefair.lombok' version "8.14"
         id 'org.ajoberstar.reckon.settings' version '0.19.2'
-        id 'org.jreleaser' version '1.18.0'
     }
 }
 plugins {
     id 'eu.xenit.enterprise-conventions.oss'
     id 'org.ajoberstar.reckon.settings'
+    id 'org.jreleaser' version '1.18.0' apply false
 }
 
 dependencyResolutionManagement {
