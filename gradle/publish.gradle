@@ -40,7 +40,6 @@ publishing {
 }
 
 jreleaser {
-    gitRootSearch = true // searches git root, needed with sub-projects
     signing {
         active = 'ALWAYS' // both 'RELEASE' and 'SNAPSHOT' enabled
         armored = true
@@ -57,6 +56,11 @@ jreleaser {
                     namespace = 'com.contentgrid'
                 }
             }
+        }
+    }
+    release {
+        github {
+            enabled = false
         }
     }
 }
