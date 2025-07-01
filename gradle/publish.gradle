@@ -1,4 +1,5 @@
 apply plugin: 'signing'
+apply plugin: 'org.jreleaser'
 
 publishing {
     publications {
@@ -32,22 +33,41 @@ publishing {
     }
 
     repositories {
-        if ("${project.version}".endsWith('-SNAPSHOT')) {
-            sonatypeSnapshots {
-                url = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
-                credentials {
-                    username = project.findProperty('sonatype_username')
-                    password = project.findProperty('sonatype_password')
+        maven {
+            url = layout.buildDirectory.dir('staging-deploy')
+        }
+    }
+}
+
+jreleaser {
+    signing {
+        active = 'ALWAYS' // both 'RELEASE' and 'SNAPSHOT' enabled
+        armored = true
+        verify = false // disables need for 'JRELEASER_GPG_PUBLIC_KEY'
+    }
+    deploy {
+        maven {
+            mavenCentral {
+                sonatype {
+                    active = 'ALWAYS' // both 'RELEASE' and 'SNAPSHOT' enabled
+                    url = 'https://central.sonatype.com/api/v1/publisher'
+                    applyMavenCentralRules = true
+                    stagingRepository('build/staging-deploy')
+                    namespace = 'com.contentgrid'
                 }
             }
-        } else {
-            sonatypeMavenCentral {
-                url = "https://s01.oss.sonatype.org/service/local/"
-                credentials {
-                    username = project.findProperty('sonatype_username')
-                    password = project.findProperty('sonatype_password')
-                }
-            }
+        }
+    }
+    // It is required to configure at least one release provider.
+    // But you can provide any non-existing non-empty GitHub token and skip creating tags and releases.
+    // see https://github.com/jreleaser/jreleaser/discussions/1725
+    gitRootSearch = true
+    release {
+        github {
+            enabled = true
+            skipTag = true
+            skipRelease = true
+            token = '__UNUSED__'
         }
     }
 }
