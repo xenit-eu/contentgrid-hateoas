@@ -1,5 +1,5 @@
 allprojects {
-    pluginManager.withPlugin('org.jreleaser:1.18.0') {
+    pluginManager.withPlugin('org.jreleaser:') {
         apply from: "${rootDir}/gradle/publish.gradle"
     }
     pluginManager.withPlugin('java-library') {
