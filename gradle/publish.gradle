@@ -50,6 +50,7 @@ jreleaser {
                     url = 'https://central.sonatype.com/api/v1/publisher'
                     applyMavenCentralRules = true
                     stagingRepository(layout.buildDirectory.dir('staging-deploy'))
+                    namespace = 'com.contentgrid'
                 }
             }
         }
