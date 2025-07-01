@@ -24,7 +24,13 @@ jobs:
         env:
           JRELEASER_GPG_SECRET_KEY: ${{ secrets.MAVEN_CENTRAL_GPG_KEY }}
           JRELEASER_GPG_PASSPHRASE: ${{ secrets.MAVEN_CENTRAL_GPG_PASSWORD }}
-        run: ./gradlew jreleaserConfig
+        run: ./gradlew jreleaserConfig --stacktrace
+      - name: Upload reports
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: reports-build
+          path: '**/build/reports'
       - name: Publish artifacts
         if: ${{ github.ref == 'refs/heads/main' || startswith(github.ref, 'refs/tags/') }}
         run: ./gradlew publish
