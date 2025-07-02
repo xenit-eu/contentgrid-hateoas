@@ -21,6 +21,9 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew check
       - name: Verify JReleaser configuration
+        env:
+          JRELEASER_NEXUS2_USERNAME: ${{ secrets.SONATYPE_CENTRAL_USERNAME }}
+          JRELEASER_NEXUS2_PASSWORD: ${{ secrets.SONATYPE_CENTRAL_PASSWORD }}
         run: ./gradlew jreleaserConfig --stacktrace
       - name: Upload reports
         if: ${{ always() }}
@@ -53,4 +56,6 @@ jobs:
         env:
           JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.SONATYPE_CENTRAL_USERNAME }}
           JRELEASER_MAVENCENTRAL_PASSWORD: ${{ secrets.SONATYPE_CENTRAL_PASSWORD }}
+          JRELEASER_NEXUS2_USERNAME: ${{ secrets.SONATYPE_CENTRAL_USERNAME }}
+          JRELEASER_NEXUS2_PASSWORD: ${{ secrets.SONATYPE_CENTRAL_PASSWORD }}
         run: ./gradlew jreleaserDeploy
