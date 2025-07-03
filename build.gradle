@@ -1,7 +1,8 @@
+apply from: "gradle/jreleaser.gradle"
+
 allprojects {
     pluginManager.withPlugin('maven-publish') {
         apply from: "${rootDir}/gradle/publish.gradle"
-        apply from: "${rootDir}/gradle/jreleaser.gradle"
     }
     pluginManager.withPlugin('java-library') {
         java {
