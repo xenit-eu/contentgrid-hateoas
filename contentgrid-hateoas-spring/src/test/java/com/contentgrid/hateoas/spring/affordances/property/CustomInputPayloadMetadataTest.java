@@ -9,6 +9,7 @@ import lombok.Data;
 import org.junit.jupiter.api.Test;
 import org.springframework.hateoas.AffordanceModel.PropertyMetadata;
 import org.springframework.hateoas.MediaTypes;
+import org.springframework.hateoas.mediatype.html.HtmlInputType;
 
 class CustomInputPayloadMetadataTest {
 
@@ -28,13 +29,37 @@ class CustomInputPayloadMetadataTest {
 
         assertThat(payloadMetadata.getType()).isEqualTo(DataClass.class);
         assertThat(payloadMetadata.stream())
-                .map(PropertyMetadata::getName)
-                .containsExactlyInAnyOrder("title", "optA", "optB");
+                .satisfiesExactlyInAnyOrder(
+                        title -> {
+                            assertThat(title.getName()).isEqualTo("title");
+                            assertThat(title.getInputType()).isEqualTo(HtmlInputType.TEXT_VALUE);
+                        },
+                        optA -> {
+                            assertThat(optA.getName()).isEqualTo("optA");
+                            assertThat(optA.getInputType()).isEqualTo(HtmlInputType.CHECKBOX_VALUE);
+                        },
+                        optB -> {
+                            assertThat(optB.getName()).isEqualTo("optB");
+                            assertThat(optB.getInputType()).isEqualTo(HtmlInputType.CHECKBOX_VALUE);
+                        }
+                );
 
         assertThat(withJsonMediatype.getMediaTypes()).containsExactly(MediaTypes.HAL_FORMS_JSON);
         assertThat(withJsonMediatype.stream())
-                .map(PropertyMetadata::getName)
-                .containsExactlyInAnyOrder("title", "optA", "optB");
+                .satisfiesExactlyInAnyOrder(
+                        title -> {
+                            assertThat(title.getName()).isEqualTo("title");
+                            assertThat(title.getInputType()).isEqualTo(HtmlInputType.TEXT_VALUE);
+                        },
+                        optA -> {
+                            assertThat(optA.getName()).isEqualTo("optA");
+                            assertThat(optA.getInputType()).isEqualTo(HtmlInputType.CHECKBOX_VALUE);
+                        },
+                        optB -> {
+                            assertThat(optB.getName()).isEqualTo("optB");
+                            assertThat(optB.getInputType()).isEqualTo(HtmlInputType.CHECKBOX_VALUE);
+                        }
+                );
     }
 
     @Test
