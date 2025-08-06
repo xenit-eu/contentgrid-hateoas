@@ -2,6 +2,9 @@ package com.contentgrid.hateoas.spring.affordances.property.modifier;
 
 import com.contentgrid.hateoas.spring.affordances.property.BasicPropertyMetadata;
 import com.contentgrid.hateoas.spring.affordances.property.PropertyMetadataWithAllowedValues;
+import com.contentgrid.hateoas.spring.affordances.property.PropertyMetadataWithItemLimits;
+import com.contentgrid.hateoas.spring.affordances.property.PropertyMetadataWithReferenceFields;
+import com.contentgrid.hateoas.spring.affordances.property.PropertyMetadataWithRemoteValues;
 import com.contentgrid.hateoas.spring.affordances.property.PropertyMetadataWithSelectedValue;
 import com.contentgrid.hateoas.spring.annotations.InternalApi;
 import com.contentgrid.hateoas.spring.annotations.PublicApi;
@@ -11,6 +14,7 @@ import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 import org.springframework.core.ResolvableType;
 import org.springframework.hateoas.AffordanceModel.PropertyMetadata;
+import org.springframework.hateoas.Link;
 
 /**
  * Modifies properties on {@link com.contentgrid.hateoas.spring.affordances.CustomInputPayloadMetadata}
@@ -81,6 +85,27 @@ public interface PropertyModifier {
     }
 
     /**
+     * Add remote values to a named property
+     *
+     * @param propertyName The name of the property to modify
+     * @param href A href pointing to the resource returning option values for the property
+     */
+    static PropertyModifier addRemoteValues(String propertyName, String href) {
+        return addRemoteValues(propertyName, Link.of(href));
+    }
+
+    /**
+     * Add remote values to a named property
+     *
+     * @param propertyName The name of the property to modify
+     * @param link A link pointing to the resource returning option values for the property
+     */
+    static PropertyModifier addRemoteValues(String propertyName, Link link) {
+        return customize(propertyName,
+                propertyMetadata -> new PropertyMetadataWithRemoteValues(propertyMetadata, link));
+    }
+
+    /**
      * Add the selected value to a named property
      * @param propertyName The name of the property to modify
      * @param selectedValue The option value(s) that are selected
@@ -88,6 +113,41 @@ public interface PropertyModifier {
     static PropertyModifier addSelectedValue(String propertyName, Object selectedValue) {
         return customize(propertyName,
                 propertyMetadata -> new PropertyMetadataWithSelectedValue(propertyMetadata, selectedValue));
+    }
+
+    /**
+     * Add maxItems to the property options. The minItems will automatically be set to 1
+     * if propertyMetadata is required, or 0 otherwise.
+     *
+     * @param propertyName The name of the property to modify
+     * @param maxItems The maximum number of items to be selected
+     */
+    static PropertyModifier addMaxItems(String propertyName, Long maxItems) {
+        return addItemLimits(propertyName, null, maxItems);
+    }
+
+    /**
+     * Add minItems and maxItems to the property options
+     *
+     * @param propertyName The name of the property to modify
+     * @param minItems The minimum number of items to be selected
+     * @param maxItems The maximum number of items to be selected
+     */
+    static PropertyModifier addItemLimits(String propertyName, Long minItems, Long maxItems) {
+        return customize(propertyName,
+                propertyMetadata -> new PropertyMetadataWithItemLimits(propertyMetadata, minItems, maxItems));
+    }
+
+    /**
+     * Add promptField and valueField to the property options
+     *
+     * @param propertyName The name of the property to modify
+     * @param promptField The name of the field that is used as prompt
+     * @param valueField The name of the field that is used as value
+     */
+    static PropertyModifier addReferenceFields(String propertyName, String promptField, String valueField) {
+        return customize(propertyName,
+                propertyMetadata -> new PropertyMetadataWithReferenceFields(propertyMetadata, promptField, valueField));
     }
 
     /**

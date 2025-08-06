@@ -1,27 +1,27 @@
 package com.contentgrid.hateoas.spring.affordances.property;
 
-import com.contentgrid.hateoas.spring.annotations.InternalApi;
 import java.util.function.UnaryOperator;
 import lombok.Getter;
 import org.springframework.hateoas.AffordanceModel.PropertyMetadata;
 import org.springframework.hateoas.mediatype.hal.forms.HalFormsOptions;
 import org.springframework.hateoas.mediatype.hal.forms.HalFormsOptions.AbstractHalFormsOptions;
 
-public class PropertyMetadataWithSelectedValue extends CustomPropertyMetadata implements UnaryOperator<HalFormsOptions> {
+@Getter
+public class PropertyMetadataWithReferenceFields extends CustomPropertyMetadata implements UnaryOperator<HalFormsOptions> {
 
-    @Getter
-    private final Object selectedValue;
+    private final String promptField;
+    private final String valueField;
 
-    @InternalApi
-    public PropertyMetadataWithSelectedValue(PropertyMetadata delegate, Object selectedValue) {
+    public PropertyMetadataWithReferenceFields(PropertyMetadata delegate, String promptField, String valueField) {
         super(delegate);
-        this.selectedValue = selectedValue;
+        this.promptField = promptField;
+        this.valueField = valueField;
     }
 
     @Override
     public HalFormsOptions apply(HalFormsOptions halFormsOptions) {
         if (halFormsOptions instanceof AbstractHalFormsOptions<?> abstractHalFormsOptions) {
-            return abstractHalFormsOptions.withSelectedValue(selectedValue);
+            return abstractHalFormsOptions.withPromptField(promptField).withValueField(valueField);
         } else {
             return halFormsOptions;
         }

@@ -6,6 +6,7 @@ import java.util.List;
 import lombok.Data;
 import org.junit.jupiter.api.Test;
 import org.springframework.hateoas.AffordanceModel.PropertyMetadata;
+import org.springframework.hateoas.Link;
 import org.springframework.hateoas.mediatype.PropertyUtils;
 
 class CustomPropertyMetadataTest {
@@ -44,6 +45,17 @@ class CustomPropertyMetadataTest {
 
         assertThat(propertyMetadata.findDelegate(PropertyMetadataWithAllowedValues.class)).hasValueSatisfying(propertyMetadataWithAllowedValues -> {
             assertThat(propertyMetadataWithAllowedValues).isSameAs(withAllowedValues);
+        });
+        assertThat(propertyMetadata.findDelegate(PropertyMetadataWithSelectedValue.class)).isEmpty();
+    }
+
+    @Test
+    void customOfWithRemoteValues() {
+        var withRemoteValues = new PropertyMetadataWithRemoteValues(PROPERTY_METADATA, Link.of("http://localhost/test"));
+        var propertyMetadata = CustomPropertyMetadata.custom(withRemoteValues);
+
+        assertThat(propertyMetadata.findDelegate(PropertyMetadataWithRemoteValues.class)).hasValueSatisfying(propertyMetadataWithAllowedValues -> {
+            assertThat(propertyMetadataWithAllowedValues).isSameAs(withRemoteValues);
         });
         assertThat(propertyMetadata.findDelegate(PropertyMetadataWithSelectedValue.class)).isEmpty();
     }

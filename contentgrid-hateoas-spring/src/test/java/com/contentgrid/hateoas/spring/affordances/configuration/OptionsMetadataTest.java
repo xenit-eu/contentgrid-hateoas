@@ -1,5 +1,6 @@
 package com.contentgrid.hateoas.spring.affordances.configuration;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import com.contentgrid.hateoas.spring.affordances.AffordanceCustomizer;
@@ -23,6 +24,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.config.EnableHypermediaSupport;
@@ -52,10 +54,18 @@ class OptionsMetadataTest {
     @RestController
     public static class TestController {
         private final Map<RestResourceName, RestResource> resources = new HashMap<>() {{
-            put(RestResourceName.of("jan"), new RestResource(RestResourceName.of("jan"), Department.IT));
-            put(RestResourceName.of("nico"), new RestResource(RestResourceName.of("nico"), Department.FINANCE));
+            put(RestResourceName.of("jan"), new RestResource(RestResourceName.of("jan"), Department.IT, Location.BRUSSELS));
+            put(RestResourceName.of("nico"), new RestResource(RestResourceName.of("nico"), Department.FINANCE, Location.PARIS));
 
         }};
+
+        @GetMapping("/locations")
+        public CollectionModel<String> getLocations() {
+            return CollectionModel.of(
+                    Arrays.stream(Location.values()).map(Location::name).toList()
+            );
+        }
+
         @GetMapping("/test/{name}")
         public EntityModel<RestResource> getResource(@PathVariable RestResourceName name) {
             var resource = resources.get(name);
@@ -75,6 +85,10 @@ class OptionsMetadataTest {
                                             .configureInput(PropertyModifier.addSelectedValue("department", resource.department))
                                             .configureInput(PropertyModifier.addAllowedValues("department",
                                                     Arrays.asList(Department.FINANCE, Department.IT)))
+                                            .configureInput(PropertyModifier.addItemLimits("department", 1L, 1L))
+                                            .configureInput(PropertyModifier.addReferenceFields("department", "test_prompt", "test_value"))
+                                            .configureInput(PropertyModifier.addRemoteValues("location", linkTo(methodOn(TestController.class).getLocations()).withSelfRel()))
+                                            .configureInput(PropertyModifier.addMaxItems("location", 10L))
                             )
                             .toLink()
                             .withSelfRel()
@@ -110,6 +124,7 @@ class OptionsMetadataTest {
         RestResourceName name;
         @NonNull
         Department department;
+        Location location;
     }
 
     @Value(staticConstructor = "of")
@@ -128,6 +143,12 @@ class OptionsMetadataTest {
         HR
     }
 
+    enum Location {
+        BRUSSELS,
+        LONDON,
+        PARIS
+    }
+
     @SpringBootApplication
     @EnableHypermediaSupport(type = {HypermediaType.HAL,HypermediaType.HAL_FORMS})
     @Import(TestController.class)
@@ -135,7 +156,8 @@ class OptionsMetadataTest {
         @Bean
         HalFormsConfiguration halFormsConfiguration(HalConfiguration halConfiguration) {
             return new HalFormsConfiguration(halConfiguration)
-                    .withOptions(RestResource.class, "department", new OptionsMetadata(Department.HR));
+                    .withOptions(RestResource.class, "department", new OptionsMetadata(Department.HR))
+                    .withOptions(RestResource.class, "location", new OptionsMetadata());
         }
     }
 
@@ -145,21 +167,22 @@ class OptionsMetadataTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json("""
                         {
-                           name: "jan",
-                           department: "IT",
-                           _links: {
+                            name: "jan",
+                            department: "IT",
+                            location: "BRUSSELS",
+                            _links: {
                                 self: {
                                     href: "http://localhost/test/jan"
                                 }
-                           },
-                           _templates: {
+                            },
+                            _templates: {
                                 "deleteResource": {
                                     method: "DELETE"
                                 },
                                 "delete": {
-                                   method: "DELETE"
-                               },
-                               "put": {
+                                    method: "DELETE"
+                                },
+                                "put": {
                                     method: "PUT",
                                     properties: [
                                         {
@@ -169,7 +192,21 @@ class OptionsMetadataTest {
                                             name: "department",
                                             value: "IT",
                                             options: {
-                                                "inline": ["FINANCE", "IT"]
+                                                "inline": ["FINANCE", "IT"],
+                                                "minItems": 1,
+                                                "maxItems": 1,
+                                                "promptField": "test_prompt",
+                                                "valueField": "test_value"
+                                            }
+                                        },
+                                        {
+                                            name: "location",
+                                            options: {
+                                                link: {
+                                                    href: "http://localhost/locations"
+                                                },
+                                                minItems: 0,
+                                                maxItems: 10
                                             }
                                         }
                                     ]

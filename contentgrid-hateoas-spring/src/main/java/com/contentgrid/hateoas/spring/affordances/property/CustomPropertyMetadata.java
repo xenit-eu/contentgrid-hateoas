@@ -7,14 +7,15 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Delegate;
 import org.springframework.hateoas.AffordanceModel.PropertyMetadata;
+import org.springframework.hateoas.mediatype.hal.forms.CustomHalFormsConfiguration;
 
 /**
  * Base class for extended customizations of {@link PropertyMetadata}
  *
  * Extended customizations are not part of the Spring HATEOAS {@link PropertyMetadata} API, but are a layer on top of it,
- * and must explicitly be handled in {@link org.springframework.hateoas.mediatype.hal.forms.HalFormsConfiguration}
+ * and must explicitly be handled in {@link CustomHalFormsConfiguration}
  *
- * @see OptionsMetadata for configuring {@link org.springframework.hateoas.mediatype.hal.forms.HalFormsConfiguration#withOptions(Class, String, Function)} based on custom metadata
+ * @see OptionsMetadata for configuring {@link CustomHalFormsConfiguration#withOptions(Class, String, Function)} based on custom metadata
  */
 @RequiredArgsConstructor
 public class CustomPropertyMetadata implements PropertyMetadata {
