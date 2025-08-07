@@ -1,14 +1,15 @@
 package com.contentgrid.hateoas.pagination.api;
 
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import lombok.NonNull;
 
 public class PaginationParameters {
 
-    private final Map<String, Object> params;
+    private final Map<String, List<String>> params;
 
-    public PaginationParameters(Map<String, ? extends Object> parameters) {
+    public PaginationParameters(Map<String, List<String>> parameters) {
         this.params = Map.copyOf(parameters);
     }
 
@@ -17,15 +18,32 @@ public class PaginationParameters {
     }
 
     public <T> T getValue(@NonNull String key, @NonNull Function<String, T> convert, T defaultValue) {
-        var value = this.params.get(key);
+        var list = this.params.get(key);
+        if (list == null || list.isEmpty()) {
+            return defaultValue;
+        }
+        var value = list.get(0);
         if (value == null) {
             return defaultValue;
         }
 
         try {
-            return convert.apply(String.valueOf(value));
+            return convert.apply(value);
         } catch (RuntimeException ex) {
             return defaultValue;
+        }
+    }
+
+    public <T> List<T> getValues(@NonNull String key, @NonNull Function<String, T> convert) {
+        var list = this.params.get(key);
+        if (list == null || list.isEmpty()) {
+            return List.of();
+        }
+
+        try {
+            return list.stream().map(convert).toList();
+        } catch (RuntimeException ex) {
+            return List.of();
         }
     }
 
