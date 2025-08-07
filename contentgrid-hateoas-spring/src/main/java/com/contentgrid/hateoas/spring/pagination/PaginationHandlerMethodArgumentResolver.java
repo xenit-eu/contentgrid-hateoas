@@ -2,6 +2,8 @@ package com.contentgrid.hateoas.spring.pagination;
 
 import com.contentgrid.hateoas.pagination.api.Pagination;
 import com.contentgrid.hateoas.pagination.api.PaginationParameters;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import org.springframework.core.MethodParameter;
@@ -30,7 +32,7 @@ public class PaginationHandlerMethodArgumentResolver implements PaginationArgume
                 .stream()
                 .collect(Collectors.toMap(
                         Entry::getKey,
-                        entry -> entry.getValue().length >= 1 ? entry.getValue()[0] : ""
+                        entry -> List.of(entry.getValue())
                 ));
         var parameters = new PaginationParameters(parameterMap);
 
@@ -54,7 +56,13 @@ public class PaginationHandlerMethodArgumentResolver implements PaginationArgume
             return;
         }
 
-        pagination.getParameters().forEach(builder::replaceQueryParam);
+        pagination.getParameters().forEach((name, object) -> {
+            if (object instanceof Collection<?> collection) {
+                builder.replaceQueryParam(name, collection);
+            } else {
+                builder.replaceQueryParam(name, object);
+            }
+        });
 
     }
 }
