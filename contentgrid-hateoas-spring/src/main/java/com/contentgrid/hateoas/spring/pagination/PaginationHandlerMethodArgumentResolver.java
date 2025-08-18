@@ -58,8 +58,10 @@ public class PaginationHandlerMethodArgumentResolver implements PaginationArgume
 
         pagination.getParameters().forEach((name, object) -> {
             if (object instanceof Collection<?> collection) {
+                // use overload replaceQueryParam(String name, Collection<?> values)
                 builder.replaceQueryParam(name, collection);
             } else {
+                // use overload replaceQueryParam(String name, Object... values)
                 builder.replaceQueryParam(name, object);
             }
         });
