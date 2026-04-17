@@ -6,7 +6,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import com.contentgrid.hateoas.spring.affordances.AffordanceCustomizerTest.TestRestController;
 import com.contentgrid.hateoas.spring.affordances.property.modifier.PropertyModifier;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.hateoas.AffordanceModel;
 import org.springframework.hateoas.AffordanceModel.PropertyMetadata;
 import org.springframework.hateoas.MediaTypes;
