@@ -5,7 +5,7 @@ plugins {
 }
 
 dependencies {
-    api platform("org.springframework.boot:spring-boot-dependencies:3.5.13")
+    api platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}")
 
     api project(":contentgrid-pagination:contentgrid-pagination-api")
 
@@ -14,8 +14,9 @@ dependencies {
     implementation 'org.springframework:spring-webmvc'
     implementation 'com.fasterxml.jackson.core:jackson-annotations'
 
-    testImplementation 'org.springframework.boot:spring-boot-starter-web'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-webmvc'
+    testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-hateoas-test'
     testImplementation 'org.junit.jupiter:junit-jupiter-engine'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testImplementation 'org.assertj:assertj-core'
