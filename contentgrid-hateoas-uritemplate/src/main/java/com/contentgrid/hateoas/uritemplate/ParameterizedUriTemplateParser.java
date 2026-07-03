@@ -31,7 +31,7 @@ public class ParameterizedUriTemplateParser<S extends Enum<S> & SubstitutionVari
     @With
     private final boolean allowTemplateVariables;
 
-    // rfc6570 Section 2.3
+    // RFC6570 Section 2.3
     private static final String CHAR_PATTERN = "([a-z0-9_]|%[0-9a-f]{2})";
     private static final NamedPattern VARIABLE_PATTERN = NamedPattern.compile("variable name",
             CHAR_PATTERN + "+(\\." + CHAR_PATTERN + "+)*", Pattern.CASE_INSENSITIVE);
@@ -107,13 +107,13 @@ public class ParameterizedUriTemplateParser<S extends Enum<S> & SubstitutionVari
 
         List<VariableDefinition> variables = new ArrayList<>();
         do {
-            // Section 2.3: Variables
+            // RFC6570 Section 2.3: Variables
             var variable = parser.consumeMatching(VARIABLE_PATTERN)
                     .orElseThrow(() -> parser.error("Invalid variable name"))
                     .group();
 
             Integer maxLength = null;
-            if (parser.consumeMatching(":")) { // Section 2.4.1: Prefix values
+            if (parser.consumeMatching(":")) { // RFC6570 Section 2.4.1: Prefix values
                 var maxLenStr = parser.consumeMatching(NUMBER)
                         .orElseThrow(() -> parser.error("Invalid prefix max-length (must be number)"))
                         .group();
@@ -121,7 +121,7 @@ public class ParameterizedUriTemplateParser<S extends Enum<S> & SubstitutionVari
             }
 
             boolean explode = false;
-            if (parser.consumeMatching("*")) { // Section 2.4.2: Composite values
+            if (parser.consumeMatching("*")) { // RFC6570 Section 2.4.2: Composite values
                 if (maxLength != null) {
                     throw parser.errorPrevious("Prefix max-length and composite value can not be combined");
                 }
