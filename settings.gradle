@@ -1,6 +1,7 @@
 pluginManagement {
     plugins {
-        id 'eu.xenit.enterprise-conventions.oss' version '0.9.0'
+        id 'eu.xenit.enterprise-conventions.oss' version '0.10.0'
+        id 'com.diffplug.spotless' version '8.10.3'
         id 'io.freefair.lombok' version "9.7.0"
         id 'org.ajoberstar.reckon.settings' version '2.0.0'
     }
